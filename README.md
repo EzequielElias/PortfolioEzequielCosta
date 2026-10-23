@@ -18,3 +18,7 @@ Filmmaker e editor de vídeo em Uberlândia, MG.
 | `favicon.svg` | Ícone da aba do navegador |
 
 É um site estático: não precisa de build. Qualquer hospedagem de arquivos estáticos serve a pasta como está.
+
+## Publicação
+
+O repositório está ligado ao Worker **portfolio** no Cloudflare. Todo envio para a branch `main` publica o site automaticamente em https://portfolio.ezequielcosta.workers.dev/.
