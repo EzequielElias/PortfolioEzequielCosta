@@ -1,0 +1,36 @@
+PORTFÓLIO EZEQUIEL COSTA — COMO ATUALIZAR NO CLOUDFLARE
+=======================================================
+
+Endereço: https://portfolio.ezequielcosta.workers.dev/
+
+O que tem nesta pasta
+---------------------
+index.html      A página do portfólio
+img/            Fotos e prints
+capas/          Capas dos vídeos
+video/          Os 7 vídeos em MP4 (computador e Android)
+video/hls/      Os mesmos vídeos em partes, para tocarem no iPhone e no Safari
+_headers        Configuração de tipos de arquivo dos vídeos (não apague)
+og-image.jpg    Imagem que aparece quando o link é enviado no WhatsApp
+favicon.svg     Ícone da aba do navegador
+
+Envie SEMPRE a pasta inteira, com todas as subpastas e o arquivo _headers.
+
+
+Como enviar a nova versão
+-------------------------
+1. Entre em https://dash.cloudflare.com
+2. Abra "Workers & Pages" (Compute) e clique no projeto "portfolio".
+3. Procure a opção para enviar uma nova versão / novo deploy com arquivos
+   (Upload / Deploy / "Create deployment").
+4. Arraste a pasta "portfolio-ezequiel-costa" inteira (ou o .zip) e confirme.
+5. Aguarde a mensagem de sucesso e abra o site novamente.
+
+O endereço continua o mesmo.
+
+
+Se um dia o endereço mudar
+--------------------------
+O endereço do site está escrito no index.html, nas linhas que começam com
+<meta property="og:  e  <link rel="canonical"
+Se você trocar de domínio, peça para atualizar essas linhas antes de enviar.
