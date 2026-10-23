@@ -1,0 +1,9 @@
+{
+  // Cloudflare Worker "portfolio" (portfolio.ezequielcosta.workers.dev).
+  // The name must match the Worker in the Cloudflare dashboard.
+  "name": "portfolio",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./"
+  }
+}
