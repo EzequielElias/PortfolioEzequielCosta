@@ -177,8 +177,8 @@ p { margin: 0; }
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: .55em;
-  padding: 7px 12px;
+  gap: .5em;
+  padding: 7px 10px;
   border-radius: 999px;
   font-family: var(--mono);
   font-size: var(--s-xs);
@@ -198,7 +198,7 @@ p { margin: 0; }
 }
 .nav a:hover, .nav a.active { color: var(--fg); }
 .nav a:hover i, .nav a.active i { background: var(--mango); border-color: var(--mango); }
-.nav .wire { width: 8px; height: 1px; background: var(--wire); flex: none; }
+.nav .wire { width: 6px; height: 1px; background: var(--wire); flex: none; }
 .glider {
   position: absolute;
   z-index: 0;
@@ -680,6 +680,416 @@ figcaption { font-family: var(--mono); font-size: var(--s-xs); color: var(--mute
 .gal figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
 .gal img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 8px; background: var(--panel); }
 
+/* Return simulator */
+.roi {
+  --sem: #7d7a91;
+  --opex: #6c6a80;
+  position: relative;
+  display: grid;
+  gap: clamp(18px, 2.4vw, 26px);
+  padding: clamp(16px, 2.6vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  overflow: hidden;
+  isolation: isolate;
+}
+.roi::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -30%;
+  right: -10%;
+  width: 55%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--mango);
+  opacity: .06;
+  filter: blur(70px);
+  pointer-events: none;
+}
+.roi-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: var(--s-xs);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+}
+
+.roi-controls {
+  display: grid;
+  grid-template-columns: max-content minmax(180px, 1fr) max-content;
+  gap: 16px 26px;
+  align-items: end;
+  margin: 0;
+}
+.roi-field { display: grid; gap: 8px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.roi-field legend, .roi-label {
+  padding: 0;
+  font-family: var(--mono);
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+}
+.roi-field legend { margin-bottom: 8px; }
+.seg-group {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+}
+.seg-group label { position: relative; flex: 1 1 auto; min-width: 0; }
+.seg-group input { position: absolute; opacity: 0; pointer-events: none; }
+.seg-group span {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: var(--s-sm);
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .25s ease, color .25s ease;
+}
+.seg-group label:hover span { color: var(--fg); }
+.seg-group input:checked + span { background: var(--mango); color: var(--on-mango); }
+.seg-group input:focus-visible + span { outline: 2px solid var(--mango); outline-offset: 2px; }
+
+.range-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.range-row output { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 1.15rem; color: var(--fg); white-space: nowrap; }
+.roi-range { --fill: 30%; width: 100%; height: 22px; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; cursor: pointer; }
+.roi-range::-webkit-slider-runnable-track { height: 6px; border-radius: 999px; background: linear-gradient(90deg, var(--mango) var(--fill), var(--line) var(--fill)); }
+.roi-range::-moz-range-track { height: 6px; border-radius: 999px; background: var(--line); }
+.roi-range::-moz-range-progress { height: 6px; border-radius: 999px; background: var(--mango); }
+.roi-range::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -7px; border-radius: 50%; background: var(--fg); border: 4px solid var(--mango); box-shadow: 0 0 0 4px color-mix(in srgb, var(--mango) 22%, transparent); }
+.roi-range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--fg); border: 4px solid var(--mango); }
+.roi-range:focus-visible { outline: 2px solid var(--mango); outline-offset: 4px; border-radius: 6px; }
+.range-scale { display: flex; justify-content: space-between; font-family: var(--mono); font-size: .66rem; color: var(--muted); }
+
+.roi-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--s-sm);
+  line-height: 1.5;
+  color: var(--muted);
+}
+.roi-note b {
+  flex: none;
+  font-family: var(--mono);
+  font-size: .66rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--fg);
+  border: 1px solid var(--wire);
+  border-radius: 4px;
+  padding: .25em .55em;
+  margin-top: 1px;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-block: 1px solid var(--line);
+}
+.kpi { display: grid; gap: 4px; align-content: start; padding: 16px 18px; min-width: 0; }
+.kpi + .kpi { border-left: 1px solid var(--line); }
+.kpi-label { display: flex; align-items: center; gap: 8px; font-size: var(--s-sm); color: var(--muted); }
+.kpi-label i { width: 10px; height: 10px; border-radius: 3px; flex: none; background: var(--mango); }
+.kpi-label i.sem { background: var(--sem); }
+.kpi-label i.ring { background: transparent; border: 2px solid var(--mango); }
+.kpi-value { font-family: var(--display); font-stretch: 108%; font-weight: 800; font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.35rem); line-height: 1.1; color: var(--fg); white-space: nowrap; }
+.kpi.kpi-main .kpi-value { font-size: clamp(1.9rem, 1.3rem + 2.1vw, 2.9rem); }
+.kpi-sub { font-size: var(--s-xs); color: var(--muted); line-height: 1.4; }
+
+.roi-card { margin: 0; display: grid; gap: 14px; min-width: 0; padding: clamp(14px, 2vw, 20px); border-radius: 12px; background: var(--bg); border: 1px solid var(--line); }
+.roi-card-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px 18px; }
+.roi-card-head h3 { font-size: clamp(1.05rem, .95rem + .4vw, 1.25rem); }
+.roi-card-head p { font-size: var(--s-sm); color: var(--muted); margin-top: 4px; max-width: 40em; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; list-style: none; margin: 0; padding: 0; font-size: var(--s-xs); color: var(--muted); }
+.legend li { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.legend .k-line { width: 16px; height: 2px; border-radius: 2px; background: var(--mango); }
+.legend .k-line.sem { background: var(--sem); }
+.legend .k-area { width: 12px; height: 10px; border-radius: 2px; background: color-mix(in srgb, var(--mango) 22%, transparent); }
+
+.chart-wrap { position: relative; min-width: 0; }
+.chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
+.chart-wrap svg:focus { outline: none; }
+.chart-wrap svg:focus-visible { outline: 2px solid var(--mango); outline-offset: 4px; border-radius: 6px; }
+.ax { font-family: var(--mono); font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.grid-line { stroke: var(--line); stroke-width: 1; }
+.ln { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ln.com { stroke: var(--mango); stroke-width: 3; }
+.ln.sem { stroke: var(--sem); }
+.gap-area { fill: url(#roi-gap); }
+.end-dot { stroke: var(--bg); stroke-width: 2; }
+.end-dot.com { fill: var(--mango); }
+.end-dot.sem { fill: var(--sem); }
+.end-lbl { font-family: var(--body); font-size: 12px; fill: var(--muted); }
+.end-val { font-family: var(--display); font-weight: 800; font-size: 15px; fill: var(--fg); }
+.anno { stroke: var(--wire); stroke-width: 1; fill: none; }
+.anno-txt { font-family: var(--mono); font-size: 10.5px; fill: var(--muted); letter-spacing: .04em; }
+.xhair { stroke: var(--fg); stroke-opacity: .35; stroke-width: 1; }
+.hover-dot { stroke: var(--bg); stroke-width: 2; }
+.pulse { fill: none; stroke: var(--mango); stroke-width: 1.5; }
+
+.tip {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  min-width: 190px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel-2) 96%, transparent);
+  border: 1px solid var(--wire);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .45);
+  pointer-events: none;
+  font-size: var(--s-xs);
+  color: var(--muted);
+  transition: opacity .15s ease;
+}
+.tip-title { font-family: var(--mono); text-transform: uppercase; letter-spacing: .08em; font-size: .66rem; margin-bottom: 6px; }
+.tip-row { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 2px 0; }
+.tip-row b { color: var(--fg); font-size: .86rem; font-variant-numeric: tabular-nums; }
+.tip-row i { width: 14px; height: 2px; border-radius: 2px; background: var(--mango); }
+.tip-row i.sem { background: var(--sem); }
+.tip-row i.dif { height: 8px; background: color-mix(in srgb, var(--mango) 30%, transparent); }
+.tip-row.total { margin-top: 4px; padding-top: 6px; border-top: 1px solid var(--line); }
+
+.roi-split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(14px, 2vw, 20px); align-items: stretch; }
+
+.stack { display: flex; gap: 2px; height: 24px; border-radius: 4px; overflow: hidden; background: var(--bg); }
+.stack span {
+  position: relative;
+  min-width: 2px;
+  background: var(--opex);
+  transition: filter .2s ease;
+  cursor: default;
+}
+.stack span.content { background: var(--mango); }
+.stack span:hover, .stack span:focus-visible { filter: brightness(1.25); outline: none; }
+.stack-scale { display: flex; justify-content: space-between; font-family: var(--mono); font-size: .66rem; color: var(--muted); margin-top: -6px; }
+.mix { list-style: none; margin: 0; padding: 0; display: grid; }
+.mix li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto 3.4em; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: var(--s-sm); color: var(--muted); }
+.mix li:last-child { border-bottom: 0; }
+.mix li i { width: 10px; height: 10px; border-radius: 3px; background: var(--opex); }
+.mix li b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.mix li em { font-style: normal; font-family: var(--mono); font-size: .72rem; text-align: right; font-variant-numeric: tabular-nums; }
+.mix li.content { color: var(--fg); }
+.mix li.content i { background: var(--mango); }
+.mix li.total { color: var(--fg); font-weight: 600; }
+.mix li.total i { background: transparent; }
+.callout { font-size: var(--s-sm); color: var(--muted); padding: 10px 12px; border-radius: 8px; background: color-mix(in srgb, var(--mango) 7%, var(--panel)); border: 1px solid color-mix(in srgb, var(--mango) 30%, transparent); }
+.callout strong { color: var(--fg); }
+
+.gauge-wrap { position: relative; max-width: 320px; width: 100%; justify-self: center; }
+.gauge-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+.g-track { fill: none; stroke: var(--line); stroke-width: 14; stroke-linecap: round; }
+.g-range { fill: none; stroke: var(--mango); stroke-opacity: .25; stroke-width: 14; }
+.g-val { fill: none; stroke: var(--mango); stroke-width: 14; stroke-linecap: round; }
+.g-tick { stroke: var(--fg); stroke-width: 2; }
+.g-tick-lbl { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+.g-center { position: absolute; left: 0; right: 0; bottom: 14%; display: grid; justify-items: center; gap: 2px; text-align: center; }
+.g-center strong { font-family: var(--display); font-stretch: 108%; font-weight: 800; font-size: clamp(2rem, 1.5rem + 2vw, 2.8rem); line-height: 1; color: var(--fg); }
+.g-cap { margin-top: -8px; text-align: center; font-size: var(--s-xs); color: var(--muted); }
+.vs { display: grid; gap: 10px; }
+.vs-row { display: grid; grid-template-columns: 8.5em minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: var(--s-sm); color: var(--muted); }
+.vs-track { min-width: 0; }
+.vs-bar { height: 18px; border-radius: 0 4px 4px 0; background: var(--opex); width: 0; }
+.vs-bar.ret { background: var(--mango); }
+.vs-row b { color: var(--fg); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+
+@media (prefers-reduced-motion: no-preference) {
+  .pulse { animation: pulse-ring 2.2s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+}
+@keyframes pulse-ring { from { transform: scale(1); opacity: .9; } to { transform: scale(3.2); opacity: 0; } }
+
+@media (max-width: 1100px) {
+  .roi-controls { grid-template-columns: minmax(0, 1fr) max-content; }
+  .roi-controls .roi-field:first-child { grid-column: 1 / -1; justify-self: start; }
+}
+@media (max-width: 900px) {
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi:nth-child(3) { border-left: 0; }
+  .kpi:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .roi-split { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .roi-controls { grid-template-columns: minmax(0, 1fr); }
+  .roi-controls .roi-field:first-child { justify-self: stretch; }
+  .seg-group span { padding: 8px 8px; font-size: .82rem; }
+  .kpi { padding: 14px 12px; }
+  .vs-row { grid-template-columns: 6.6em minmax(0, 1fr) auto; }
+}
+
+/* Chart look */
+.band { fill: var(--fg); opacity: .022; }
+.stem { fill: url(#roi-stem); }
+.sem-dot { fill: var(--sem); stroke: var(--bg); stroke-width: 1.5; }
+.scan { stroke: var(--mango); stroke-width: 2; }
+.scan-head { fill: var(--mango); }
+.scan-glow { fill: url(#roi-scan); }
+
+/* Disclosures */
+.disc { border-top: 1px solid var(--line); padding-top: 10px; }
+.disc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 2px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--s-xs);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: color .25s ease;
+}
+.disc-btn:hover, .disc[data-open="true"] .disc-btn { color: var(--fg); }
+.disc-ico {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--wire);
+  transition: transform .5s cubic-bezier(.2, .7, .2, 1), border-color .3s ease, background-color .3s ease;
+}
+.disc-ico::before, .disc-ico::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 1.5px;
+  margin: -.75px 0 0 -5px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform .5s cubic-bezier(.2, .7, .2, 1), opacity .3s ease;
+}
+.disc-ico::after { transform: rotate(90deg); }
+.disc-btn:hover .disc-ico { border-color: var(--muted); }
+.disc[data-open="true"] .disc-ico { transform: rotate(180deg); border-color: var(--mango); background-color: color-mix(in srgb, var(--mango) 16%, transparent); }
+.disc[data-open="true"] .disc-ico::after { transform: rotate(0deg); opacity: 0; }
+.disc-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s cubic-bezier(.2, .7, .2, 1); }
+.disc[data-open="true"] .disc-panel { grid-template-rows: 1fr; }
+.disc-inner { min-height: 0; overflow: hidden; }
+.disc-inner > * { opacity: 0; transform: translateY(-8px); transition: opacity .3s ease, transform .4s cubic-bezier(.2, .7, .2, 1); }
+.disc[data-open="true"] .disc-inner > * { opacity: 1; transform: none; transition-delay: .12s; }
+
+/* Month by month */
+.mm { display: grid; gap: 14px; padding-block: 14px 4px; }
+.mm-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.mm-sum div { display: grid; gap: 2px; padding: 12px 14px; border-radius: 10px; background: var(--panel); border: 1px solid var(--line); min-width: 0; }
+.mm-sum span { font-size: var(--s-xs); color: var(--muted); }
+.mm-sum strong { font-family: var(--display); font-stretch: 108%; font-weight: 800; font-size: 1.3rem; color: var(--fg); white-space: nowrap; }
+.mm-q { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.q { display: grid; gap: 10px; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 70%, transparent); min-width: 0; }
+.q-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.q-head div { display: grid; gap: 1px; }
+.q-head b { font-family: var(--mono); font-size: .68rem; font-weight: 500; text-transform: uppercase; letter-spacing: .08em; color: var(--fg); }
+.q-head span { font-size: var(--s-xs); color: var(--muted); }
+.q-head em { font-style: normal; font-weight: 700; color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.m-row { display: grid; grid-template-columns: 3.4em minmax(0, 1fr) 6.6em; column-gap: 12px; row-gap: 3px; align-items: center; }
+.m-lbl { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+.m-track { height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.m-fill { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, color-mix(in srgb, var(--mango) 45%, transparent), var(--mango)); transform-origin: left center; transition: width .6s cubic-bezier(.2, .7, .2, 1); }
+.m-val { text-align: right; font-size: var(--s-sm); font-weight: 700; color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.m-sub { grid-column: 2 / -1; font-size: .72rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.assump { margin: 12px 0 4px; padding-left: 1.1em; display: grid; gap: 6px; font-size: var(--s-sm); color: var(--muted); max-width: 62em; }
+.assump strong { color: var(--fg); font-weight: 600; }
+
+/* Real data carousel */
+.real { display: grid; gap: 16px; min-width: 0; padding: clamp(14px, 2vw, 20px); border-radius: 12px; background: var(--bg); border: 1px solid var(--line); }
+.real-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 8px 18px; }
+.real-head > div { display: grid; gap: 6px; max-width: 46em; }
+.real-head h3 { font-size: clamp(1.05rem, .95rem + .4vw, 1.25rem); }
+.real-head p { font-size: var(--s-sm); color: var(--muted); }
+.real-chip {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: .25em .6em;
+  border: 1px solid var(--wire);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: .66rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--fg);
+}
+.real-chip i { width: 7px; height: 7px; border-radius: 50%; background: var(--meter); }
+.real-hint { font-family: var(--mono); font-size: .66rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.marquee-track { display: flex; width: max-content; animation: marquee 80s linear infinite; }
+.marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
+.marquee-group { display: flex; gap: 12px; padding-right: 12px; }
+.rc {
+  width: 270px;
+  flex: none;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  transition: border-color .25s ease, transform .25s ease;
+}
+.rc:hover { border-color: color-mix(in srgb, var(--mango) 55%, var(--line)); transform: translateY(-2px); }
+.rc-name { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.rc-name b { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: .95rem; letter-spacing: .03em; text-transform: uppercase; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rc-name span { font-family: var(--mono); font-size: .68rem; color: var(--muted); flex: none; }
+.rc-fig { font-family: var(--display); font-stretch: 108%; font-weight: 800; font-size: 1.9rem; line-height: 1.05; color: var(--fg); padding-left: 10px; border-left: 3px solid var(--mango); }
+.rc-txt { font-size: var(--s-sm); line-height: 1.45; color: var(--muted); }
+.rc-src { font-family: var(--mono); font-size: .66rem; line-height: 1.4; color: var(--muted); text-decoration: underline; text-decoration-color: var(--wire); text-underline-offset: 3px; }
+.rc-src:hover { color: var(--fg); text-decoration-color: var(--mango); }
+.real-note { font-size: var(--s-xs); color: var(--muted); max-width: 70em; }
+
+@media (max-width: 760px) {
+  .mm-q { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .mm-sum { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .mm-sum div { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 10px; padding: 10px 12px; }
+  .mm-sum strong { font-size: 1.05rem; }
+  .m-row { grid-template-columns: 3.2em minmax(0, 1fr) 5.8em; column-gap: 8px; }
+  .rc { width: 240px; }
+  .real-hint { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .disc[data-open="true"] .m-fill { animation: grow-x .8s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 45ms + .2s); }
+}
+@keyframes grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .disc-ico, .disc-ico::before, .disc-ico::after, .disc-panel, .disc-inner > *, .m-fill, .rc { transition: none; }
+  .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .marquee-track { animation: none; }
+  .marquee-group[aria-hidden="true"] { display: none; }
+}
+
 /* About */
 .about {
   display: grid;
@@ -1042,6 +1452,7 @@ footer .wrap {
   .menu-list li:nth-child(4) { animation-delay: .12s; }
   .menu-list li:nth-child(5) { animation-delay: .16s; }
   .menu-list li:nth-child(6) { animation-delay: .2s; }
+  .menu-list li:nth-child(7) { animation-delay: .24s; }
   .vplay:hover .btnc::after { animation: ping 1.4s ease-out infinite; }
   .vframe.playing .eq i { animation: eq-bar .8s ease-in-out infinite alternate; }
   .eq i:nth-child(2) { animation-delay: -.3s !important; }
@@ -1094,13 +1505,17 @@ footer .wrap {
 }
 
 /* Responsive */
-@media (max-width: 1120px) {
+@media (max-width: 1279px) {
   .nav { display: none; }
   .top-wa { margin-left: auto; }
   .menu-btn { display: inline-block; }
 }
-@media (min-width: 1121px) {
+@media (min-width: 1280px) {
   .menu { display: none !important; }
+}
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .nav .wire { display: none; }
+  .nav a { padding: 7px 9px; }
 }
 @media (max-width: 480px) {
   .top .wrap { gap: 10px; }
@@ -1174,6 +1589,8 @@ html, body { margin: 0; }
       <span class="wire" aria-hidden="true"></span>
       <a href="#servicos"><i aria-hidden="true"></i>Serviços</a>
       <span class="wire" aria-hidden="true"></span>
+      <a href="#retorno"><i aria-hidden="true"></i>Retorno</a>
+      <span class="wire" aria-hidden="true"></span>
       <a href="#bastidores"><i aria-hidden="true"></i>Bastidores</a>
       <span class="wire" aria-hidden="true"></span>
       <a href="#sobre"><i aria-hidden="true"></i>Trajetória</a>
@@ -1188,6 +1605,7 @@ html, body { margin: 0; }
       <li><a href="#resultados"><i aria-hidden="true"></i>Resultados</a></li>
       <li><a href="#videos"><i aria-hidden="true"></i>Vídeos</a></li>
       <li><a href="#servicos"><i aria-hidden="true"></i>Serviços</a></li>
+      <li><a href="#retorno"><i aria-hidden="true"></i>Retorno</a></li>
       <li><a href="#bastidores"><i aria-hidden="true"></i>Bastidores</a></li>
       <li><a href="#sobre"><i aria-hidden="true"></i>Trajetória</a></li>
       <li><a href="#contato"><i aria-hidden="true"></i>Contato</a></li>
@@ -1265,7 +1683,7 @@ html, body { margin: 0; }
   <section class="section" id="resultados">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow"><span class="steps" style="--p: 0.0%" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></span>Resultados</p>
+        <p class="eyebrow"><span class="steps" style="--p: 0.0%" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></span>Resultados</p>
         <h2>Um Reel com 11,3 Milhões de Visualizações</h2>
         <p class="sub">Conteúdo editado para perfis de especialistas. Dois desses perfis chegaram a 114 mil seguidores em pouco tempo, ambos com lançamento de curso.</p>
         <p class="note"><span class="note-tag">Projetos Relevantes</span><span class="note-text">Estes são os projetos e resultados mais relevantes em que atuei, sempre somente na edição dos conteúdos, pela EVOX Estúdios. Não são projetos ativos, e hoje não atuo mais neles.</span></p>
@@ -1366,7 +1784,7 @@ html, body { margin: 0; }
   <section class="section" id="videos">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow"><span class="steps" style="--p: 20.0%" aria-hidden="true"><i class="done"></i><i class="on"></i><i></i><i></i><i></i><i></i></span>Vídeos</p>
+        <p class="eyebrow"><span class="steps" style="--p: 16.67%" aria-hidden="true"><i class="done"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i></span>Vídeos</p>
         <h2>Trabalhos Recentes</h2>
         <p class="sub">Toque na capa para assistir nesta página.</p>
       </div>
@@ -1442,7 +1860,7 @@ html, body { margin: 0; }
   <section class="section" id="servicos">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow"><span class="steps" style="--p: 40.0%" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="on"></i><i></i><i></i><i></i></span>Serviços</p>
+        <p class="eyebrow"><span class="steps" style="--p: 33.33%" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="on"></i><i></i><i></i><i></i><i></i></span>Serviços</p>
         <h2>Da Captação ao Arquivo Final</h2>
         <p class="sub">Tipos de trabalho já entregues, da gravação no local ao vídeo pronto para publicar.</p>
       </div>
@@ -1483,10 +1901,298 @@ html, body { margin: 0; }
     </div>
   </section>
 
+  <section class="section" id="retorno">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow"><span class="steps" style="--p: 50.0%" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i></i><i></i><i></i></span>Retorno</p>
+        <h2>Empresas que Aparecem Faturam Mais</h2>
+        <p class="sub">Uma simulação de 12 meses que compara o faturamento de quem produz conteúdo com constância com o de quem ainda não aparece nas redes. Escolha o segmento e o faturamento atual para ver a projeção do seu negócio.</p>
+      </div>
+
+      <div class="roi" id="roi">
+        <div class="roi-bar">
+          <span>Simulador de retorno · 12 meses</span>
+        </div>
+
+        <form class="roi-controls" id="roi-form" aria-label="Dados da simulação">
+          <fieldset class="roi-field">
+            <legend>Segmento</legend>
+            <div class="seg-group">
+              <label><input type="radio" name="seg" id="seg-restaurante" value="restaurante" checked><span>Restaurante</span></label>
+              <label><input type="radio" name="seg" id="seg-loja" value="loja"><span>Loja</span></label>
+              <label><input type="radio" name="seg" id="seg-servicos" value="servicos"><span>Clínica e Serviços</span></label>
+            </div>
+          </fieldset>
+          <div class="roi-field">
+            <div class="range-row">
+              <label class="roi-label" for="roi-rev">Faturamento mensal atual</label>
+              <output id="roi-rev-out" for="roi-rev">R$ 80 mil</output>
+            </div>
+            <input class="roi-range" type="range" id="roi-rev" min="30000" max="300000" step="5000" value="80000">
+            <div class="range-scale" aria-hidden="true"><span>R$ 30 mil</span><span>R$ 300 mil</span></div>
+          </div>
+          <fieldset class="roi-field">
+            <legend>Cenário</legend>
+            <div class="seg-group">
+              <label><input type="radio" name="scen" id="scen-conservador" value="conservador"><span>Conservador</span></label>
+              <label><input type="radio" name="scen" id="scen-moderado" value="moderado" checked><span>Moderado</span></label>
+              <label><input type="radio" name="scen" id="scen-otimista" value="otimista"><span>Otimista</span></label>
+            </div>
+          </fieldset>
+        </form>
+
+        <p class="roi-note"><b>Projeção</b><span>Dados ilustrativos, baseados em projeções. Os resultados podem ser maiores ou menores de acordo com a realidade atual de cada empresa.</span></p>
+
+        <div class="kpis" aria-live="polite">
+          <div class="kpi kpi-main">
+            <span class="kpi-label"><i aria-hidden="true"></i>Faturamento a mais por mês</span>
+            <span class="kpi-value" id="k-extra">R$ 18 mil</span>
+            <span class="kpi-sub">no 12º mês, com produção de conteúdo</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-label"><i class="ring" aria-hidden="true"></i>Crescimento projetado</span>
+            <span class="kpi-value" id="k-up">+22%</span>
+            <span class="kpi-sub">em relação a não produzir conteúdo</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-label"><i class="sem" aria-hidden="true"></i>Investimento mensal</span>
+            <span class="kpi-value" id="k-inv">R$ 3.500</span>
+            <span class="kpi-sub" id="k-inv-sub">5,6% das despesas operacionais</span>
+          </div>
+          <div class="kpi">
+            <span class="kpi-label"><i aria-hidden="true"></i>Retorno em 12 meses</span>
+            <span class="kpi-value" id="k-roi">R$ 3,15</span>
+            <span class="kpi-sub">de faturamento a mais para cada R$ 1 investido</span>
+          </div>
+        </div>
+
+        <figure class="roi-card">
+          <div class="roi-card-head">
+            <div>
+              <h3>Faturamento Mensal Projetado</h3>
+              <p>Mesma empresa, dois caminhos: produzir conteúdo todo mês ou continuar fora das redes.</p>
+            </div>
+            <ul class="legend" aria-label="Legenda">
+              <li><i class="k-line" aria-hidden="true"></i>Com produção de conteúdo</li>
+              <li><i class="k-line sem" aria-hidden="true"></i>Sem presença nas redes</li>
+              <li><i class="k-area" aria-hidden="true"></i>Faturamento a mais</li>
+            </ul>
+          </div>
+          <div class="chart-wrap" id="roi-chart">
+            <div class="tip" id="roi-tip" hidden></div>
+          </div>
+          <div class="disc" data-open="false">
+            <button class="disc-btn" type="button" id="roi-mm-btn" aria-expanded="false" aria-controls="roi-mm"><span class="disc-ico" aria-hidden="true"></span>Ver os números mês a mês</button>
+            <div class="disc-panel" id="roi-mm" role="region" aria-labelledby="roi-mm-btn">
+              <div class="disc-inner">
+                <div class="mm" id="roi-months"></div>
+              </div>
+            </div>
+          </div>
+        </figure>
+
+        <section class="real" aria-labelledby="real-title">
+          <div class="real-head">
+            <div>
+              <span class="real-chip"><i aria-hidden="true"></i>Dados reais</span>
+              <h3 id="real-title">Quem Investe em Conteúdo</h3>
+              <p>Números públicos de relatórios anuais, balanços e pesquisas de mercado. Diferente da simulação, estes dados são reais.</p>
+            </div>
+            <p class="real-hint">Passe o mouse para pausar</p>
+          </div>
+          <div class="marquee">
+            <div class="marquee-track">
+              <div class="marquee-group">
+              <article class="rc">
+                <div class="rc-name"><b>Unilever</b><span>2024</span></div>
+                <p class="rc-fig">15,5%</p>
+                <p class="rc-txt">do faturamento investido em marca e marketing, o maior nível em mais de uma década. As vendas subjacentes cresceram 4,2% no ano.</p>
+                <a class="rc-src" href="https://www.unilever.com/news/press-and-media/press-releases/2025/improved-performance-led-by-volume-growth-and-gross-margin-expansion/" target="_blank" rel="noopener">Fonte: Unilever, resultados de 2024 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Airbnb</b><span>2021–2023</span></div>
+                <p class="rc-fig">~90%</p>
+                <p class="rc-txt">do tráfego chega de forma direta ou não paga, depois que a empresa cortou anúncios de performance para investir em marca.</p>
+                <a class="rc-src" href="https://www.marketingweek.com/airbnb-performance-marketing/" target="_blank" rel="noopener">Fonte: Marketing Week, com dados do Airbnb ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Mercado Livre</b><span>2024</span></div>
+                <p class="rc-fig">US$ 2,2 bi</p>
+                <p class="rc-txt">investidos em vendas e marketing. No mesmo ano, a receita cresceu 38%.</p>
+                <a class="rc-src" href="https://www.sec.gov/Archives/edgar/data/1099590/000109959025000007/meli-20241231.htm" target="_blank" rel="noopener">Fonte: Mercado Livre, relatório anual 2024 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Magalu</b><span>2024</span></div>
+                <p class="rc-fig">71%</p>
+                <p class="rc-txt">das vendas vieram do digital: mais de R$ 46 bi de um total de R$ 65 bi.</p>
+                <a class="rc-src" href="https://ri.magazineluiza.com.br/ListResultados/Download.aspx?Arquivo=7T8vewPlO6wL+d1pZrpqYQ%3D%3D" target="_blank" rel="noopener">Fonte: Magazine Luiza, resultados do 4º tri de 2024 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Nubank</b><span>2021</span></div>
+                <p class="rc-fig">80–90%</p>
+                <p class="rc-txt">dos clientes chegaram de forma orgânica, por indicação, com custo de aquisição de cerca de US$ 5 por cliente.</p>
+                <a class="rc-src" href="https://finsidersbrasil.com.br/noticias-sobre-fintechs/nubank-pode-captar-ate-us-36-bi-com-ipo-veja-detalhes-do-prospecto/" target="_blank" rel="noopener">Fonte: Prospecto do IPO, via Finsiders ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Coca-Cola</b><span>2024</span></div>
+                <p class="rc-fig">US$ 5,1 bi</p>
+                <p class="rc-txt">em publicidade em um único ano, mesmo sendo uma das marcas mais conhecidas do mundo.</p>
+                <a class="rc-src" href="https://www.sec.gov/Archives/edgar/data/21344/000002134425000011/ko-20241231.htm" target="_blank" rel="noopener">Fonte: Coca-Cola, relatório anual 2024 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Netflix</b><span>2024</span></div>
+                <p class="rc-fig">US$ 1,78 bi</p>
+                <p class="rc-txt">em publicidade. No mesmo ano, a receita chegou a US$ 39 bi, 16% a mais.</p>
+                <a class="rc-src" href="https://www.sec.gov/Archives/edgar/data/1065280/000106528025000044/nflx-20241231.htm" target="_blank" rel="noopener">Fonte: Netflix, relatório anual 2024 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Nike</b><span>2022</span></div>
+                <p class="rc-fig">+24%</p>
+                <p class="rc-txt">de investimento em marketing e campanhas, com as vendas digitais da marca crescendo 18% no ano fiscal.</p>
+                <a class="rc-src" href="https://www.sec.gov/Archives/edgar/data/320187/000032018722000029/q4fy22exhibit991er.htm" target="_blank" rel="noopener">Fonte: Nike, resultados do ano fiscal 2022 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Mercado brasileiro</b><span>2025</span></div>
+                <p class="rc-fig">40,6%</p>
+                <p class="rc-txt">da verba de mídia das agências no Brasil foi para a internet.</p>
+                <a class="rc-src" href="https://www.meioemensagem.com.br/midia/cenp-meios-aponta-crescimento-de-10-em-2025" target="_blank" rel="noopener">Fonte: Cenp-Meios, via Meio &amp; Mensagem ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Pequenos negócios</b><span>2024</span></div>
+                <p class="rc-fig">48%</p>
+                <p class="rc-txt">dos pequenos negócios brasileiros já pagaram por anúncios nas redes sociais ou na internet.</p>
+                <a class="rc-src" href="https://agenciasebrae.com.br/dados/quase-metade-dos-pequenos-negocios-investe-em-propaganda-paga-na-internet/" target="_blank" rel="noopener">Fonte: Sebrae, Pulso dos Pequenos Negócios ↗</a>
+              </article>
+              </div>
+              <div class="marquee-group" aria-hidden="true">
+              <article class="rc">
+                <div class="rc-name"><b>Unilever</b><span>2024</span></div>
+                <p class="rc-fig">15,5%</p>
+                <p class="rc-txt">do faturamento investido em marca e marketing, o maior nível em mais de uma década. As vendas subjacentes cresceram 4,2% no ano.</p>
+                <a class="rc-src" href="https://www.unilever.com/news/press-and-media/press-releases/2025/improved-performance-led-by-volume-growth-and-gross-margin-expansion/" target="_blank" rel="noopener" tabindex="-1">Fonte: Unilever, resultados de 2024 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Airbnb</b><span>2021–2023</span></div>
+                <p class="rc-fig">~90%</p>
+                <p class="rc-txt">do tráfego chega de forma direta ou não paga, depois que a empresa cortou anúncios de performance para investir em marca.</p>
+                <a class="rc-src" href="https://www.marketingweek.com/airbnb-performance-marketing/" target="_blank" rel="noopener" tabindex="-1">Fonte: Marketing Week, com dados do Airbnb ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Mercado Livre</b><span>2024</span></div>
+                <p class="rc-fig">US$ 2,2 bi</p>
+                <p class="rc-txt">investidos em vendas e marketing. No mesmo ano, a receita cresceu 38%.</p>
+                <a class="rc-src" href="https://www.sec.gov/Archives/edgar/data/1099590/000109959025000007/meli-20241231.htm" target="_blank" rel="noopener" tabindex="-1">Fonte: Mercado Livre, relatório anual 2024 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Magalu</b><span>2024</span></div>
+                <p class="rc-fig">71%</p>
+                <p class="rc-txt">das vendas vieram do digital: mais de R$ 46 bi de um total de R$ 65 bi.</p>
+                <a class="rc-src" href="https://ri.magazineluiza.com.br/ListResultados/Download.aspx?Arquivo=7T8vewPlO6wL+d1pZrpqYQ%3D%3D" target="_blank" rel="noopener" tabindex="-1">Fonte: Magazine Luiza, resultados do 4º tri de 2024 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Nubank</b><span>2021</span></div>
+                <p class="rc-fig">80–90%</p>
+                <p class="rc-txt">dos clientes chegaram de forma orgânica, por indicação, com custo de aquisição de cerca de US$ 5 por cliente.</p>
+                <a class="rc-src" href="https://finsidersbrasil.com.br/noticias-sobre-fintechs/nubank-pode-captar-ate-us-36-bi-com-ipo-veja-detalhes-do-prospecto/" target="_blank" rel="noopener" tabindex="-1">Fonte: Prospecto do IPO, via Finsiders ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Coca-Cola</b><span>2024</span></div>
+                <p class="rc-fig">US$ 5,1 bi</p>
+                <p class="rc-txt">em publicidade em um único ano, mesmo sendo uma das marcas mais conhecidas do mundo.</p>
+                <a class="rc-src" href="https://www.sec.gov/Archives/edgar/data/21344/000002134425000011/ko-20241231.htm" target="_blank" rel="noopener" tabindex="-1">Fonte: Coca-Cola, relatório anual 2024 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Netflix</b><span>2024</span></div>
+                <p class="rc-fig">US$ 1,78 bi</p>
+                <p class="rc-txt">em publicidade. No mesmo ano, a receita chegou a US$ 39 bi, 16% a mais.</p>
+                <a class="rc-src" href="https://www.sec.gov/Archives/edgar/data/1065280/000106528025000044/nflx-20241231.htm" target="_blank" rel="noopener" tabindex="-1">Fonte: Netflix, relatório anual 2024 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Nike</b><span>2022</span></div>
+                <p class="rc-fig">+24%</p>
+                <p class="rc-txt">de investimento em marketing e campanhas, com as vendas digitais da marca crescendo 18% no ano fiscal.</p>
+                <a class="rc-src" href="https://www.sec.gov/Archives/edgar/data/320187/000032018722000029/q4fy22exhibit991er.htm" target="_blank" rel="noopener" tabindex="-1">Fonte: Nike, resultados do ano fiscal 2022 ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Mercado brasileiro</b><span>2025</span></div>
+                <p class="rc-fig">40,6%</p>
+                <p class="rc-txt">da verba de mídia das agências no Brasil foi para a internet.</p>
+                <a class="rc-src" href="https://www.meioemensagem.com.br/midia/cenp-meios-aponta-crescimento-de-10-em-2025" target="_blank" rel="noopener" tabindex="-1">Fonte: Cenp-Meios, via Meio &amp; Mensagem ↗</a>
+              </article>
+              <article class="rc">
+                <div class="rc-name"><b>Pequenos negócios</b><span>2024</span></div>
+                <p class="rc-fig">48%</p>
+                <p class="rc-txt">dos pequenos negócios brasileiros já pagaram por anúncios nas redes sociais ou na internet.</p>
+                <a class="rc-src" href="https://agenciasebrae.com.br/dados/quase-metade-dos-pequenos-negocios-investe-em-propaganda-paga-na-internet/" target="_blank" rel="noopener" tabindex="-1">Fonte: Sebrae, Pulso dos Pequenos Negócios ↗</a>
+              </article>
+              </div>
+            </div>
+          </div>
+          <p class="real-note">Investimento e crescimento aparecem no mesmo período, e cada empresa mede o investimento de um jeito, então os valores não são comparáveis entre si. As empresas citadas não têm relação com este portfólio.</p>
+        </section>
+
+        <div class="roi-split">
+          <figure class="roi-card">
+            <div class="roi-card-head">
+              <div>
+                <h3>Quanto o Conteúdo Pesa nas Despesas</h3>
+                <p>Despesas operacionais mensais estimadas para o segmento, com o investimento em conteúdo somado ao final.</p>
+              </div>
+            </div>
+            <div class="stack" id="roi-stack" role="img" aria-label="Despesas operacionais mensais com o investimento em conteúdo"></div>
+            <div class="stack-scale" aria-hidden="true"><span>R$ 0</span><span id="roi-stack-total">R$ 66 mil</span></div>
+            <ul class="mix" id="roi-mix"></ul>
+            <p class="callout" id="roi-callout">O conteúdo representa <strong>5,6%</strong> do que a empresa já gasta todo mês para funcionar.</p>
+          </figure>
+
+          <figure class="roi-card">
+            <div class="roi-card-head">
+              <div>
+                <h3>Quanto a Mais Faturar</h3>
+                <p>Crescimento projetado no faturamento depois de 12 meses de produção constante.</p>
+              </div>
+            </div>
+            <div class="gauge-wrap">
+              <svg viewBox="-34 -26 308 172" role="img" aria-labelledby="g-title" id="roi-gauge">
+                <title id="g-title">Crescimento projetado do faturamento</title>
+                <path class="g-track" d="M 20 120 A 100 100 0 0 1 220 120"></path>
+                <path class="g-range" id="g-range" d="M 20 120 A 100 100 0 0 1 220 120"></path>
+                <path class="g-val" id="g-val" d="M 20 120 A 100 100 0 0 1 220 120"></path>
+                <g id="g-ticks"></g>
+              </svg>
+              <div class="g-center"><strong id="g-num">+22%</strong></div>
+            </div>
+            <p class="g-cap">no faturamento em 12 meses</p>
+            <div class="vs">
+              <div class="vs-row"><span>Investido</span><div class="vs-track"><div class="vs-bar" id="vs-inv"></div></div><b id="vs-inv-v">R$ 42 mil</b></div>
+              <div class="vs-row"><span>Faturado a mais</span><div class="vs-track"><div class="vs-bar ret" id="vs-ret"></div></div><b id="vs-ret-v">R$ 132 mil</b></div>
+            </div>
+            <p class="callout" id="roi-callout-2">Em 12 meses, <strong>R$ 42 mil</strong> investidos se transformam em <strong>R$ 132 mil</strong> de faturamento a mais.</p>
+          </figure>
+        </div>
+
+        <div class="disc" data-open="false">
+          <button class="disc-btn" type="button" id="roi-assump-btn" aria-expanded="false" aria-controls="roi-assump"><span class="disc-ico" aria-hidden="true"></span>Premissas da simulação</button>
+          <div class="disc-panel" id="roi-assump" role="region" aria-labelledby="roi-assump-btn">
+            <div class="disc-inner">
+              <ul class="assump">
+          <li><strong>Sem presença nas redes:</strong> o faturamento cresce 0,2% ao mês.</li>
+          <li><strong>Com produção de conteúdo:</strong> o crescimento é gradual. Os três primeiros meses constroem audiência e o resultado acelera a partir do quarto mês.</li>
+          <li><strong>Crescimento em 12 meses, no cenário moderado:</strong> 22% para restaurantes, 18% para lojas e 15% para clínicas e serviços. O cenário conservador usa metade desses valores, e o otimista, 1,6 vez.</li>
+          <li><strong>Despesas operacionais:</strong> 78% do faturamento em restaurantes, 72% em lojas e 62% em clínicas e serviços.</li>
+          <li><strong>Investimento:</strong> R$ 3.500 por mês, referência de um profissional PJ de filmagem e edição.</li>
+        </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section" id="bastidores">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow"><span class="steps" style="--p: 60.0%" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i></i><i></i></span>Bastidores</p>
+        <p class="eyebrow"><span class="steps" style="--p: 66.67%" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i></i><i></i></span>Bastidores</p>
         <h2>Em Campo e na Ilha de Edição</h2>
         <p class="sub">Gravações de profissionais, produtos e momentos.</p>
       </div>
@@ -1544,7 +2250,7 @@ html, body { margin: 0; }
         <figcaption>Operação da estrutura de som e imagem durante a gravação de um podcast: controle das câmeras, mixagem do áudio na mesa de som e gravação multicâmera no OBS</figcaption>
       </figure>
       <div class="about-copy">
-        <p class="eyebrow"><span class="steps" style="--p: 80.0%" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i></i></span>Trajetória</p>
+        <p class="eyebrow"><span class="steps" style="--p: 83.33%" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i></i></span>Trajetória</p>
         <h2>Edição Primeiro, Câmera Depois</h2>
         <p><strong>Editor de vídeo há 3 anos.</strong> Trabalho com estrategistas digitais na edição de conteúdo para crescimento de perfis de especialistas e influenciadores. Conteúdos editados por mim alcançaram milhões de pessoas e trouxeram milhares de novos seguidores para esses perfis.</p>
         <p><strong>Filmmaker há 1 ano.</strong> Centenas de vídeos gravados em lojas, empresas e restaurantes, de conteúdo para redes sociais a vídeos de produto para as TVs de comércios.</p>
@@ -1576,7 +2282,7 @@ html, body { margin: 0; }
     <div class="wrap">
       <div class="contact-box">
         <div class="contact-info">
-          <p class="eyebrow"><span class="steps" style="--p: 100.0%" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i></span>Contato</p>
+          <p class="eyebrow"><span class="steps" style="--p: 100.0%" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i></span>Contato</p>
           <h2>Ezequiel Costa</h2>
           <dl class="data">
             <div><dt>WhatsApp</dt><dd>(34) 99905-1334</dd></div>
@@ -1806,6 +2512,601 @@ html, body { margin: 0; }
     });
   }, { threshold: .6 });
   counters.forEach(function (el) { cio.observe(el); });
+})();
+
+/* Return simulator: projected revenue with and without content production */
+(function () {
+  var root = document.getElementById('roi');
+  if (!root) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS = 'http://www.w3.org/2000/svg';
+
+  var SEG = {
+    restaurante: { opex: 0.78, uplift: 0.22, mix: [['Insumos e alimentos', 0.34], ['Folha de pagamento', 0.28], ['Aluguel', 0.12], ['Impostos', 0.11], ['Energia, água e gás', 0.09], ['Outras despesas', 0.06]] },
+    loja: { opex: 0.72, uplift: 0.18, mix: [['Mercadorias', 0.46], ['Folha de pagamento', 0.20], ['Aluguel', 0.13], ['Impostos', 0.12], ['Energia e contas', 0.03], ['Outras despesas', 0.06]] },
+    servicos: { opex: 0.62, uplift: 0.15, mix: [['Folha de pagamento', 0.40], ['Aluguel', 0.16], ['Impostos', 0.15], ['Materiais', 0.14], ['Energia e contas', 0.06], ['Outras despesas', 0.09]] }
+  };
+  var SCEN = { conservador: 0.5, moderado: 1, otimista: 1.6 };
+  var SCEN_LBL = { conservador: 'Cons.', moderado: 'Mod.', otimista: 'Otim.' };
+  var INVEST = 3500, BASE_G = 0.002, GMAX = 0.4, STAG = 55;
+  var state = { seg: 'restaurante', rev: 80000, scen: 'moderado' };
+
+  function ramp(m) {
+    var k = 0.75, m0 = 5;
+    var f = function (x) { return 1 / (1 + Math.exp(-k * (x - m0))); };
+    return (f(m) - f(0)) / (f(12) - f(0));
+  }
+  function model(st) {
+    var seg = SEG[st.seg], up = seg.uplift * SCEN[st.scen];
+    var sem = [], com = [], cum = 0;
+    for (var m = 0; m <= 12; m++) {
+      var base = st.rev * Math.pow(1 + BASE_G, m);
+      sem.push(base);
+      com.push(base * (1 + up * ramp(m)));
+      if (m > 0) { cum += com[m] - sem[m]; }
+    }
+    var opex = st.rev * seg.opex;
+    return {
+      sem: sem, com: com, up: up, cum: cum,
+      extra12: com[12] - sem[12],
+      roi: cum / (INVEST * 12),
+      share: INVEST / opex,
+      mixVals: seg.mix.map(function (p) { return opex * p[1]; }),
+      lo: seg.uplift * SCEN.conservador, hi: seg.uplift * SCEN.otimista,
+      mixLbl: seg.mix.map(function (p) { return p[0]; }),
+      ticks: { conservador: seg.uplift * SCEN.conservador, moderado: seg.uplift, otimista: seg.uplift * SCEN.otimista }
+    };
+  }
+  var NUM_KEYS = ['up', 'cum', 'extra12', 'roi', 'share', 'lo', 'hi'];
+  function copyModel(t) {
+    var c = {};
+    for (var k in t) { c[k] = Array.isArray(t[k]) ? t[k].slice() : t[k]; }
+    return c;
+  }
+
+  /* formatting */
+  function nf(v, d) { return v.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function brl(v) { return 'R$ ' + nf(Math.round(v), 0); }
+  function brlK(v) {
+    var a = Math.abs(v);
+    if (a >= 1e6) { return 'R$ ' + nf(v / 1e6, 1).replace(/,0$/, '') + ' mi'; }
+    if (a >= 1e3) { return 'R$ ' + nf(v / 1e3, a >= 1e5 ? 0 : 1).replace(/,0$/, '') + ' mil'; }
+    return brl(v);
+  }
+  function pct(v, d) { return nf(v * 100, d).replace(/,0$/, '') + '%'; }
+  function $(id) { return document.getElementById(id); }
+  function el(tag, attrs, parent) {
+    var n = document.createElementNS(NS, tag);
+    for (var k in attrs) { n.setAttribute(k, attrs[k]); }
+    if (parent) { parent.appendChild(n); }
+    return n;
+  }
+  function h(tag, cls, text, parent) {
+    var n = document.createElement(tag);
+    if (cls) { n.className = cls; }
+    if (text != null) { n.textContent = text; }
+    if (parent) { parent.appendChild(n); }
+    return n;
+  }
+
+  /* ---------- line chart ---------- */
+  var box = $('roi-chart'), tip = $('roi-tip');
+  var svg = el('svg', { tabindex: '0', role: 'img', 'aria-label': 'Faturamento mensal projetado em 12 meses, com e sem produção de conteúdo. Use as setas para ver cada mês.' });
+  box.insertBefore(svg, tip);
+  var defs = el('defs', {}, svg);
+  function grad(id, x2, y2, stops) {
+    var g = el('linearGradient', { id: id, x1: 0, y1: 0, x2: x2, y2: y2 }, defs);
+    stops.forEach(function (s) { el('stop', { offset: s[0], 'stop-color': 'var(--mango)', 'stop-opacity': s[1] }, g); });
+  }
+  grad('roi-gap', 0, 1, [['0%', 0.30], ['100%', 0.02]]);
+  grad('roi-stem', 0, 1, [['0%', 1], ['100%', 0.25]]);
+  grad('roi-scan', 1, 0, [['0%', 0], ['100%', 0.22]]);
+  var glow = el('filter', { id: 'roi-glow', filterUnits: 'userSpaceOnUse', x: 0, y: 0, width: 2000, height: 600 }, defs);
+  el('feGaussianBlur', { in: 'SourceGraphic', stdDeviation: 3.2, result: 'b' }, glow);
+  var fm = el('feMerge', {}, glow);
+  el('feMergeNode', { in: 'b' }, fm);
+  el('feMergeNode', { in: 'SourceGraphic' }, fm);
+  var clip = el('clipPath', { id: 'roi-clip' }, defs);
+  var clipRect = el('rect', { x: 0, y: 0, width: 0, height: 0 }, clip);
+
+  var gBands = el('g', {}, svg);
+  var gGrid = el('g', {}, svg);
+  var gX = el('g', {}, svg);
+  var gAnno = el('g', {}, svg);
+  var gScanGlow = el('rect', { class: 'scan-glow', visibility: 'hidden' }, svg);
+  var gData = el('g', { 'clip-path': 'url(#roi-clip)' }, svg);
+  var area = el('path', { class: 'gap-area' }, gData);
+  var gStems = el('g', {}, gData);
+  var lnSem = el('path', { class: 'ln sem' }, gData);
+  var gSemDots = el('g', {}, gData);
+  var lnCom = el('path', { class: 'ln com', filter: 'url(#roi-glow)' }, gData);
+  var pulse = el('circle', { class: 'pulse', r: 5 }, gData);
+  var dSem = el('circle', { class: 'end-dot sem', r: 4.5 }, gData);
+  var dCom = el('circle', { class: 'end-dot com', r: 5.5 }, gData);
+  var gEnd = el('g', {}, svg);
+  var scan = el('line', { class: 'scan', visibility: 'hidden' }, svg);
+  var scanHead = el('path', { class: 'scan-head', visibility: 'hidden' }, svg);
+  var xh = el('line', { class: 'xhair', visibility: 'hidden' }, svg);
+  var hSem = el('circle', { class: 'hover-dot end-dot sem', r: 5, visibility: 'hidden' }, svg);
+  var hCom = el('circle', { class: 'hover-dot end-dot com', r: 6, visibility: 'hidden' }, svg);
+  var hit = el('rect', { fill: 'transparent' }, svg);
+  var stems = [], semDots = [];
+  for (var i = 0; i <= 12; i++) {
+    stems.push(el('rect', { class: 'stem' }, gStems));
+    semDots.push(el('circle', { class: 'sem-dot', r: 2.6 }, gSemDots));
+  }
+
+  var G = { reveal: 1 };
+  function layout() {
+    var W = Math.max(300, Math.round(box.clientWidth || 600));
+    var narrow = W < 560, rv = G.reveal;
+    G = { W: W, H: narrow ? 250 : 330, narrow: narrow, l: 56, r: narrow ? 14 : 138, t: 38, b: 30, reveal: rv };
+    G.pw = G.W - G.l - G.r;
+    G.ph = G.H - G.t - G.b;
+    svg.setAttribute('viewBox', '0 0 ' + G.W + ' ' + G.H);
+    hit.setAttribute('x', G.l); hit.setAttribute('y', G.t);
+    hit.setAttribute('width', G.pw); hit.setAttribute('height', G.ph);
+    glow.setAttribute('width', G.W); glow.setAttribute('height', G.H);
+    clipRect.setAttribute('y', G.t - 14);
+    clipRect.setAttribute('height', G.ph + 16);
+    setReveal(G.reveal);
+    drawStatic();
+  }
+  function setReveal(k) { G.reveal = k; clipRect.setAttribute('width', k * (G.W + 20)); }
+  function niceStep(r) {
+    var e = Math.pow(10, Math.floor(Math.log(r) / Math.LN10));
+    var f = r / e;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * e;
+  }
+  function need(t) { return { y0: Math.min.apply(null, t.sem) * 0.9, y1: Math.max.apply(null, t.com) * 1.04 }; }
+  function fitDom(t) {
+    var n = need(t), step = niceStep((n.y1 - n.y0) / 4);
+    return { y0: Math.floor(n.y0 / step) * step, y1: Math.ceil(n.y1 / step) * step };
+  }
+  var dom = { y0: 0, y1: 1 };
+  function X(m) { return G.l + G.pw * m / 12; }
+  function Y(v) { return G.t + G.ph * (1 - (v - dom.y0) / (dom.y1 - dom.y0)); }
+  function curve(pts) {
+    var d = 'M' + pts[0][0].toFixed(1) + ' ' + pts[0][1].toFixed(1);
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      var c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = p1[1] + (p2[1] - p0[1]) / 6;
+      var c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
+      d += 'C' + c1x.toFixed(1) + ' ' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ' ' + c2y.toFixed(1) + ' ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1);
+    }
+    return d;
+  }
+  function clear(g) { while (g.firstChild) { g.removeChild(g.firstChild); } }
+  function drawStatic() {
+    clear(gBands); clear(gX); clear(gAnno);
+    for (var m = 1; m <= 12; m += 2) {
+      el('rect', { class: 'band', x: X(m - 1), y: G.t, width: G.pw / 12, height: G.ph }, gBands);
+    }
+    (G.narrow ? [0, 6, 12] : [0, 3, 6, 9, 12]).forEach(function (m) {
+      var t = el('text', { class: 'ax', x: X(m), y: G.H - 8, 'text-anchor': m === 0 ? 'start' : m === 12 ? 'end' : 'middle' }, gX);
+      t.textContent = m === 0 ? 'Hoje' : (G.narrow ? m + ' meses' : 'Mês ' + m);
+    });
+    var yb = G.t - 18;
+    [[0, 3, G.narrow ? 'Audiência' : 'Construção de audiência'], [3, 12, G.narrow ? 'Aceleração' : 'Resultado acelera']].forEach(function (s, i) {
+      var x1 = X(s[0]) + (i ? 4 : 0), x2 = X(s[1]) - (i ? 0 : 4);
+      el('path', { class: 'anno', d: 'M' + x1 + ' ' + (yb + 5) + 'V' + yb + 'H' + x2 + 'V' + (yb + 5) }, gAnno);
+      var t = el('text', { class: 'anno-txt', x: (x1 + x2) / 2, y: yb - 6, 'text-anchor': 'middle' }, gAnno);
+      t.textContent = s[2];
+    });
+  }
+  function drawGrid() {
+    clear(gGrid);
+    var step = niceStep((dom.y1 - dom.y0) / 4);
+    for (var v = Math.ceil(dom.y0 / step - 1e-9) * step; v <= dom.y1 + step * 1e-6; v += step) {
+      var y = Y(v);
+      el('line', { class: 'grid-line', x1: G.l, x2: G.l + G.pw, y1: y, y2: y }, gGrid);
+      var t = el('text', { class: 'ax', x: G.l - 10, y: y + 4, 'text-anchor': 'end' }, gGrid);
+      t.textContent = brlK(v).replace('R$ ', '');
+    }
+  }
+  function drawData(v) {
+    var pc = v.com.map(function (val, m) { return [X(m), Y(val)]; });
+    var ps = v.sem.map(function (val, m) { return [X(m), Y(val)]; });
+    var dc = curve(pc);
+    lnCom.setAttribute('d', dc);
+    lnSem.setAttribute('d', curve(ps));
+    area.setAttribute('d', dc + curve(ps.slice().reverse()).replace(/^M/, 'L') + 'Z');
+    var sw = Math.max(4, Math.min(12, G.pw / 12 * 0.26));
+    for (var m = 0; m <= 12; m++) {
+      var top = pc[m][1], bot = ps[m][1], hgt = Math.max(0, bot - top - 7);
+      var s = stems[m];
+      s.setAttribute('x', (pc[m][0] - sw / 2).toFixed(1));
+      s.setAttribute('y', (top + 4).toFixed(1));
+      s.setAttribute('width', sw.toFixed(1));
+      s.setAttribute('height', hgt.toFixed(1));
+      s.setAttribute('rx', Math.min(3, sw / 2));
+      s.setAttribute('visibility', m === 0 || hgt < 2 ? 'hidden' : 'visible');
+      semDots[m].setAttribute('cx', ps[m][0]); semDots[m].setAttribute('cy', ps[m][1]);
+      semDots[m].setAttribute('visibility', m === 12 ? 'hidden' : 'visible');
+    }
+    var ec = pc[12], es = ps[12];
+    dCom.setAttribute('cx', ec[0]); dCom.setAttribute('cy', ec[1]);
+    pulse.setAttribute('cx', ec[0]); pulse.setAttribute('cy', ec[1]);
+    dSem.setAttribute('cx', es[0]); dSem.setAttribute('cy', es[1]);
+    clear(gEnd);
+    if (!G.narrow) {
+      var yc = Math.max(G.t, ec[1]), ys = es[1];
+      if (ys - yc < 40) { var mid = (yc + ys) / 2; yc = mid - 20; ys = mid + 20; }
+      [[yc, v.com[12], 'com conteúdo'], [ys, v.sem[12], 'sem presença']].forEach(function (r) {
+        var a = el('text', { class: 'end-val', x: ec[0] + 14, y: r[0] + 1 }, gEnd);
+        a.textContent = brlK(r[1]);
+        var b = el('text', { class: 'end-lbl', x: ec[0] + 14, y: r[0] + 17 }, gEnd);
+        b.textContent = r[2];
+      });
+    }
+  }
+  function drawScan(front, alpha) {
+    var vis = front == null ? 'hidden' : 'visible';
+    [scan, scanHead, gScanGlow].forEach(function (n) { n.setAttribute('visibility', vis); });
+    if (front == null) return;
+    var x = X(Math.min(12, front));
+    scan.setAttribute('x1', x); scan.setAttribute('x2', x);
+    scan.setAttribute('y1', G.t - 8); scan.setAttribute('y2', G.t + G.ph);
+    scanHead.setAttribute('d', 'M' + (x - 6) + ' ' + (G.t - 14) + 'h12v6l-6 6l-6 -6z');
+    var gw = Math.min(70, x - G.l);
+    gScanGlow.setAttribute('x', x - gw); gScanGlow.setAttribute('y', G.t);
+    gScanGlow.setAttribute('width', Math.max(0, gw)); gScanGlow.setAttribute('height', G.ph);
+    [scan, scanHead, gScanGlow].forEach(function (n) { n.setAttribute('opacity', alpha.toFixed(2)); });
+  }
+
+  /* hover / keyboard */
+  var hoverM = null;
+  function rowEl(cls, name, value) {
+    var r = h('div', 'tip-row' + (cls === 'dif' ? ' total' : ''));
+    h('i', cls || '', null, r);
+    h('span', '', name, r);
+    h('b', '', value, r);
+    return r;
+  }
+  function showAt(m) {
+    hoverM = m;
+    var v = cur, x = X(m);
+    xh.setAttribute('x1', x); xh.setAttribute('x2', x); xh.setAttribute('y1', G.t); xh.setAttribute('y2', G.t + G.ph);
+    hSem.setAttribute('cx', x); hSem.setAttribute('cy', Y(v.sem[m]));
+    hCom.setAttribute('cx', x); hCom.setAttribute('cy', Y(v.com[m]));
+    [xh, hSem, hCom].forEach(function (n) { n.setAttribute('visibility', 'visible'); });
+    tip.textContent = '';
+    h('div', 'tip-title', m === 0 ? 'Hoje' : 'Mês ' + m, tip);
+    tip.appendChild(rowEl('', 'Com conteúdo', brl(v.com[m])));
+    tip.appendChild(rowEl('sem', 'Sem presença', brl(v.sem[m])));
+    tip.appendChild(rowEl('dif', 'A mais', '+ ' + brl(v.com[m] - v.sem[m])));
+    tip.hidden = false;
+    var scale = box.clientWidth / G.W;
+    var px = x * scale, tw = tip.offsetWidth, bw = box.clientWidth;
+    var left = px + 14 + tw > bw ? px - tw - 14 : px + 14;
+    tip.style.left = Math.max(0, left) + 'px';
+    tip.style.top = Math.max(0, (G.t + 6) * scale) + 'px';
+  }
+  function hideTip() {
+    hoverM = null; tip.hidden = true;
+    [xh, hSem, hCom].forEach(function (n) { n.setAttribute('visibility', 'hidden'); });
+  }
+  function mFromEvent(e) {
+    var r = svg.getBoundingClientRect();
+    var x = (e.clientX - r.left) * (G.W / r.width);
+    return Math.max(0, Math.min(12, Math.round((x - G.l) / G.pw * 12)));
+  }
+  svg.addEventListener('pointermove', function (e) { showAt(mFromEvent(e)); });
+  svg.addEventListener('pointerdown', function (e) { showAt(mFromEvent(e)); });
+  svg.addEventListener('pointerleave', hideTip);
+  svg.addEventListener('focus', function () { showAt(12); });
+  svg.addEventListener('blur', hideTip);
+  svg.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      showAt(Math.max(0, Math.min(12, (hoverM == null ? 12 : hoverM) + (e.key === 'ArrowRight' ? 1 : -1))));
+    } else if (e.key === 'Escape') { svg.blur(); }
+  });
+
+  /* ---------- expenses stack ---------- */
+  var stack = $('roi-stack'), mix = $('roi-mix'), stackSegs = [], mixRows = [], builtSeg = null, stackVals = [];
+  var stip = h('div', 'tip');
+  stip.hidden = true;
+  stack.parentNode.style.position = 'relative';
+  stack.parentNode.appendChild(stip);
+  function segTip(i, s) {
+    var total = stackVals.reduce(function (a, b) { return a + b; }, 0);
+    var isC = i === stackVals.length - 1;
+    stip.textContent = '';
+    h('div', 'tip-title', mixRows[i].name, stip);
+    stip.appendChild(rowEl(isC ? '' : 'sem', 'Por mês', brl(stackVals[i])));
+    stip.appendChild(rowEl(isC ? '' : 'sem', 'Do total', pct(stackVals[i] / total, 1)));
+    stip.hidden = false;
+    var pr = stack.parentNode.getBoundingClientRect(), sr = s.getBoundingClientRect();
+    var left = sr.left - pr.left + sr.width / 2 - stip.offsetWidth / 2;
+    stip.style.left = Math.max(0, Math.min(pr.width - stip.offsetWidth, left)) + 'px';
+    stip.style.top = (sr.top - pr.top - stip.offsetHeight - 8) + 'px';
+  }
+  function buildStack(t) {
+    stack.textContent = ''; mix.textContent = ''; stackSegs = []; mixRows = [];
+    var names = t.mixLbl.concat(['Produção de conteúdo']);
+    names.forEach(function (name, i) {
+      var isC = i === names.length - 1;
+      var s = h('span', isC ? 'content' : '', null, stack);
+      s.tabIndex = 0;
+      s.addEventListener('pointerenter', function () { segTip(i, s); });
+      s.addEventListener('focus', function () { segTip(i, s); });
+      s.addEventListener('pointerleave', function () { stip.hidden = true; });
+      s.addEventListener('blur', function () { stip.hidden = true; });
+      stackSegs.push(s);
+      var li = h('li', isC ? 'content' : '', null, mix);
+      h('i', '', null, li);
+      h('span', '', name, li);
+      mixRows.push({ val: h('b', '', '', li), pc: h('em', '', '', li), name: name });
+    });
+    var tot = h('li', 'total', null, mix);
+    h('i', '', null, tot);
+    h('span', '', 'Total mensal', tot);
+    mixRows.push({ val: h('b', '', '', tot), pc: h('em', '', '100%', tot), total: true });
+    builtSeg = state.seg;
+  }
+
+  /* ---------- gauge ---------- */
+  var gVal = $('g-val'), gRange = $('g-range'), gTicks = $('g-ticks');
+  [gVal, gRange].forEach(function (p) { p.setAttribute('pathLength', '100'); });
+  function polar(f, r) { var a = Math.PI * (1 - f); return [120 + r * Math.cos(a), 120 - r * Math.sin(a)]; }
+  function drawTicks(t) {
+    clear(gTicks);
+    Object.keys(t.ticks).forEach(function (k) {
+      var f = Math.min(1, t.ticks[k] / GMAX), a = polar(f, 89), b = polar(f, 111), c = polar(f, 120);
+      el('line', { class: 'g-tick', x1: a[0], y1: a[1], x2: b[0], y2: b[1], 'stroke-opacity': k === state.scen ? 1 : 0.35 }, gTicks);
+      var anchor = f < 0.4 ? 'end' : f > 0.6 ? 'start' : 'middle';
+      var top = anchor === 'middle' ? c[1] - 14 : c[1] - 4;
+      var tx = el('text', { class: 'g-tick-lbl', 'text-anchor': anchor }, gTicks);
+      el('tspan', { x: c[0], y: top }, tx).textContent = SCEN_LBL[k];
+      el('tspan', { x: c[0], y: top + 12 }, tx).textContent = pct(t.ticks[k], 0);
+      if (k === state.scen) { tx.setAttribute('fill', 'var(--fg)'); }
+    });
+    [['0%', 0], [pct(GMAX, 0), 1]].forEach(function (s) {
+      var p = polar(s[1], 100);
+      el('text', { class: 'g-tick-lbl', x: p[0], y: p[1] + 16, 'text-anchor': 'middle' }, gTicks).textContent = s[0];
+    });
+  }
+
+  /* ---------- month by month ---------- */
+  var mm = $('roi-months'), mmRefs = null;
+  var QUARTERS = [['1º trimestre', 'Construção de audiência'], ['2º trimestre', 'Primeiros resultados'], ['3º trimestre', 'Aceleração'], ['4º trimestre', 'Consolidação']];
+  function buildMonths() {
+    mm.textContent = '';
+    mmRefs = { sum: [], q: [], rows: [] };
+    var sum = h('div', 'mm-sum', null, mm);
+    ['Faturamento a mais em 12 meses', 'Média por mês', 'No 12º mês'].forEach(function (lbl) {
+      var d = h('div', '', null, sum);
+      h('span', '', lbl, d);
+      mmRefs.sum.push(h('strong', '', '', d));
+    });
+    var qs = h('div', 'mm-q', null, mm);
+    QUARTERS.forEach(function (q, qi) {
+      var card = h('section', 'q', null, qs);
+      var head = h('div', 'q-head', null, card);
+      var hl = h('div', '', null, head);
+      h('b', '', q[0], hl);
+      h('span', '', q[1], hl);
+      mmRefs.q.push(h('em', '', '', head));
+      for (var j = 1; j <= 3; j++) {
+        var m = qi * 3 + j;
+        var row = h('div', 'm-row', null, card);
+        row.style.setProperty('--i', m);
+        h('span', 'm-lbl', 'Mês ' + m, row);
+        var track = h('div', 'm-track', null, row);
+        var fill = h('div', 'm-fill', null, track);
+        var val = h('span', 'm-val', '', row);
+        var sub = h('span', 'm-sub', '', row);
+        mmRefs.rows.push({ fill: fill, val: val, sub: sub });
+      }
+    });
+  }
+  function drawMonths(t) {
+    if (!mmRefs) { buildMonths(); }
+    var diffs = t.com.map(function (c, i) { return c - t.sem[i]; });
+    var max = Math.max.apply(null, diffs) || 1;
+    mmRefs.sum[0].textContent = '+ ' + brlK(t.cum);
+    mmRefs.sum[1].textContent = '+ ' + brlK(t.cum / 12);
+    mmRefs.sum[2].textContent = '+ ' + brlK(diffs[12]);
+    for (var q = 0; q < 4; q++) {
+      mmRefs.q[q].textContent = '+ ' + brlK(diffs[q * 3 + 1] + diffs[q * 3 + 2] + diffs[q * 3 + 3]);
+    }
+    mmRefs.rows.forEach(function (r, i) {
+      var m = i + 1;
+      r.fill.style.width = Math.max(1.5, diffs[m] / max * 100).toFixed(2) + '%';
+      r.val.textContent = '+ ' + brlK(diffs[m]);
+      r.sub.textContent = 'Com ' + brlK(t.com[m]) + ' · sem ' + brlK(t.sem[m]);
+    });
+  }
+
+  /* ---------- render ---------- */
+  var kExtra = $('k-extra'), kUp = $('k-up'), kInvSub = $('k-inv-sub'), kRoi = $('k-roi');
+  var gNum = $('g-num'), vsInv = $('vs-inv'), vsRet = $('vs-ret'), vsInvV = $('vs-inv-v'), vsRetV = $('vs-ret-v');
+  var callout = $('roi-callout'), callout2 = $('roi-callout-2'), stackTotal = $('roi-stack-total');
+  function strongText(node, parts) {
+    node.textContent = '';
+    parts.forEach(function (p) {
+      if (p.s) { h('strong', '', p.s, node); } else { node.appendChild(document.createTextNode(p)); }
+    });
+  }
+  function render(v) {
+    drawGrid();
+    drawData(v);
+    kExtra.textContent = brlK(v.extra12);
+    kUp.textContent = '+' + pct(v.up, 0);
+    kInvSub.textContent = pct(v.share, 1) + ' das despesas operacionais';
+    kRoi.textContent = 'R$ ' + nf(v.roi, 2);
+    gNum.textContent = '+' + pct(v.up, 0);
+    gVal.setAttribute('stroke-dasharray', (Math.min(1, v.up / GMAX) * 100).toFixed(2) + ' 200');
+    gRange.setAttribute('stroke-dasharray', '0 ' + (v.lo / GMAX * 100).toFixed(2) + ' ' + ((v.hi - v.lo) / GMAX * 100).toFixed(2) + ' 200');
+    var mx = Math.max(INVEST * 12, v.cum, 1);
+    vsInv.style.width = (INVEST * 12 / mx * 100).toFixed(2) + '%';
+    vsRet.style.width = (Math.max(0, v.cum) / mx * 100).toFixed(2) + '%';
+    vsInvV.textContent = brlK(INVEST * 12);
+    vsRetV.textContent = brlK(v.cum);
+    stackVals = v.mixVals.concat([INVEST]);
+    var total = stackVals.reduce(function (a, b) { return a + b; }, 0);
+    stackVals.forEach(function (val, i) {
+      if (stackSegs[i]) {
+        stackSegs[i].style.flex = '0 0 calc(' + (val / total * 100).toFixed(3) + '% - 2px)';
+        stackSegs[i].setAttribute('aria-label', mixRows[i].name + ': ' + brl(val));
+      }
+      if (mixRows[i]) { mixRows[i].val.textContent = brl(val); mixRows[i].pc.textContent = pct(val / total, 1); }
+    });
+    var last = mixRows[mixRows.length - 1];
+    if (last && last.total) { last.val.textContent = brl(total); }
+    stackTotal.textContent = brlK(total);
+    strongText(callout, ['O conteúdo representa ', { s: pct(v.share, 1) }, ' do que a empresa já gasta todo mês para funcionar.']);
+    strongText(callout2, v.cum >= INVEST * 12
+      ? ['Em 12 meses, ', { s: brlK(INVEST * 12) }, ' investidos se transformam em ', { s: brlK(v.cum) }, ' de faturamento a mais.']
+      : ['Em 12 meses, ', { s: brlK(INVEST * 12) }, ' investidos trazem ', { s: brlK(v.cum) }, ' de faturamento a mais. No 12º mês, o conteúdo já gera ', { s: brlK(v.extra12) }, ' a mais por mês.']);
+    if (hoverM != null) { showAt(hoverM); }
+  }
+
+  /* ---------- motion: values follow the target like a camera ----------
+     Revenue slider: the curves move with the value while the frame holds,
+     then the frame re-fits ("reenquadra") once the slider rests.
+     Segment / scenario: the new values sweep in month by month behind a playhead. */
+  var cur = null, tgt = null, domFit = null;
+  var lastInput = -1e9, wave = null, loopOn = false, lastT = 0;
+  function kick() { if (!loopOn) { loopOn = true; lastT = performance.now(); requestAnimationFrame(loop); } }
+  var EPS = { up: 1e-4, share: 1e-5, lo: 1e-4, hi: 1e-4, roi: 1e-3, cum: 0.5, extra12: 0.5 };
+  function follow(a, b, k, eps) { return Math.abs(b - a) < (eps || 0.5) ? b : a + (b - a) * k; }
+  function loop(now) {
+    var dt = Math.min(64, now - lastT); lastT = now;
+    var k = 1 - Math.pow(1 - 0.14, dt / 16.7);
+    var moving = false;
+    ['sem', 'com'].forEach(function (key) {
+      for (var i = 0; i <= 12; i++) {
+        if (wave && now - wave.t0 < i * STAG) { moving = true; continue; }
+        var nv = follow(cur[key][i], tgt[key][i], k);
+        if (nv !== tgt[key][i]) { moving = true; }
+        cur[key][i] = nv;
+      }
+    });
+    NUM_KEYS.forEach(function (key) {
+      var nv = follow(cur[key], tgt[key], k, EPS[key]);
+      if (nv !== tgt[key]) { moving = true; }
+      cur[key] = nv;
+    });
+    cur.mixVals = cur.mixVals.map(function (val, i) { var nv = follow(val, tgt.mixVals[i], k); if (nv !== tgt.mixVals[i]) { moving = true; } return nv; });
+
+    var resting = now - lastInput > 420;
+    var n = need(cur), want = resting ? domFit : { y0: Math.min(dom.y0, n.y0), y1: Math.max(dom.y1, n.y1) };
+    var kd = 1 - Math.pow(1 - (resting ? 0.1 : 0.3), dt / 16.7);
+    var ny0 = follow(dom.y0, want.y0, kd), ny1 = follow(dom.y1, want.y1, kd);
+    if (ny0 !== want.y0 || ny1 !== want.y1 || !resting) { moving = true; }
+    dom.y0 = ny0; dom.y1 = ny1;
+
+    var front = null, alpha = 1;
+    if (wave) {
+      front = (now - wave.t0) / STAG;
+      if (front > 12) { alpha = Math.max(0, 1 - (front - 12) / 6); }
+      if (front > 18) { wave = null; front = null; }
+      else if (front < 0) { front = null; }
+      moving = true;
+    }
+    render(cur);
+    drawScan(front, alpha);
+    if (moving) { requestAnimationFrame(loop); }
+    else { loopOn = false; drawScan(null); }
+  }
+
+  /* table of months and gauge ticks follow the target directly */
+  function update(how) {
+    var t = model(state);
+    if (builtSeg !== state.seg) {
+      buildStack(t);
+      if (cur) { cur.mixVals = cur.mixVals.slice(0, t.mixVals.length); }
+    }
+    tgt = t;
+    domFit = fitDom(t);
+    drawTicks(t);
+    drawMonths(t);
+    if (!cur || reduce) {
+      cur = copyModel(t);
+      dom = { y0: domFit.y0, y1: domFit.y1 };
+      render(cur);
+      return;
+    }
+    if (how === 'wave') { wave = { t0: performance.now() }; }
+    kick();
+  }
+
+  /* controls */
+  var form = $('roi-form'), rev = $('roi-rev'), revOut = $('roi-rev-out');
+  function syncRange() {
+    var f = (rev.value - rev.min) / (rev.max - rev.min) * 100;
+    rev.style.setProperty('--fill', f + '%');
+    revOut.textContent = brlK(+rev.value);
+  }
+  var lastKey = '';
+  function onControls(e) {
+    var seg = form.querySelector('input[name="seg"]:checked');
+    var scen = form.querySelector('input[name="scen"]:checked');
+    var segChanged = seg && seg.value !== state.seg, scenChanged = scen && scen.value !== state.scen;
+    state.seg = seg ? seg.value : state.seg;
+    state.scen = scen ? scen.value : state.scen;
+    state.rev = +rev.value;
+    syncRange();
+    var key = state.seg + state.scen + state.rev;
+    if (key === lastKey) return;
+    lastKey = key;
+    if (e && e.target === rev) { lastInput = performance.now(); }
+    update(segChanged || scenChanged ? 'wave' : 'follow');
+  }
+  form.addEventListener('submit', function (e) { e.preventDefault(); });
+  form.addEventListener('input', onControls);
+  form.addEventListener('change', onControls);
+
+  /* disclosures: "Ver os números mês a mês" and "Premissas" */
+  Array.prototype.forEach.call(root.querySelectorAll('.disc'), function (d) {
+    var btn = d.querySelector('.disc-btn'), panel = d.querySelector('.disc-panel');
+    panel.inert = true;
+    btn.addEventListener('click', function () {
+      var open = d.getAttribute('data-open') !== 'true';
+      d.setAttribute('data-open', open ? 'true' : 'false');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      panel.inert = !open;
+    });
+  });
+
+  /* first paint: complete at rest */
+  layout();
+  syncRange();
+  lastKey = state.seg + state.scen + state.rev;
+  update();
+
+  if ('ResizeObserver' in window) {
+    var lastW = box.clientWidth;
+    new ResizeObserver(function () {
+      if (Math.abs(box.clientWidth - lastW) < 2) return;
+      lastW = box.clientWidth;
+      layout(); render(cur);
+    }).observe(box);
+  }
+
+  /* first view: the chart draws in and the content line rises from the grey one, month by month */
+  if (!reduce && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        io.disconnect();
+        cur.com = cur.sem.slice();
+        cur.up = 0; cur.cum = 0; cur.extra12 = 0; cur.roi = 0;
+        render(cur);
+        var start = performance.now();
+        (function reveal(now) {
+          var k = Math.min(1, (now - start) / 900);
+          setReveal(1 - Math.pow(1 - k, 3));
+          if (k < 1) { requestAnimationFrame(reveal); }
+        })(start);
+        wave = { t0: start + 250 };
+        kick();
+      });
+    }, { threshold: 0.3 });
+    io.observe(svg);
+  }
 })();
 </script>
 
