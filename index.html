@@ -805,14 +805,14 @@ figcaption { font-family: var(--mono); font-size: var(--s-xs); color: var(--mute
   grid-template-columns: repeat(4, minmax(0, 1fr));
   border-block: 1px solid var(--line);
 }
-.kpi { display: grid; gap: 4px; align-content: start; padding: 16px 18px; min-width: 0; }
+.kpi { display: grid; gap: 4px; align-content: start; padding: 16px 18px; min-width: 0; container-type: inline-size; }
 .kpi + .kpi { border-left: 1px solid var(--line); }
 .kpi-label { display: flex; align-items: center; gap: 8px; font-size: var(--s-sm); color: var(--muted); }
 .kpi-label i { width: 10px; height: 10px; border-radius: 3px; flex: none; background: var(--mango); }
 .kpi-label i.sem { background: var(--sem); }
 .kpi-label i.ring { background: transparent; border: 2px solid var(--mango); }
-.kpi-value { font-family: var(--display); font-stretch: 108%; font-weight: 800; font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.35rem); line-height: 1.1; color: var(--fg); white-space: nowrap; }
-.kpi.kpi-main .kpi-value { font-size: clamp(1.9rem, 1.3rem + 2.1vw, 2.9rem); }
+.kpi-value { font-family: var(--display); font-stretch: 108%; font-weight: 800; font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.35rem); font-size: clamp(1.1rem, 13cqi, 2.35rem); line-height: 1.1; color: var(--fg); min-width: 0; overflow-wrap: anywhere; }
+.kpi.kpi-main .kpi-value { font-size: clamp(1.9rem, 1.3rem + 2.1vw, 2.9rem); font-size: clamp(1.2rem, 13.5cqi, 2.9rem); }
 .kpi-sub { font-size: var(--s-xs); color: var(--muted); line-height: 1.4; }
 
 .roi-card { margin: 0; display: grid; gap: 14px; min-width: 0; padding: clamp(14px, 2vw, 20px); border-radius: 12px; background: var(--bg); border: 1px solid var(--line); }
