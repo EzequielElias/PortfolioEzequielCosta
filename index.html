@@ -61,6 +61,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
@@ -596,9 +597,82 @@ figcaption { font-family: var(--mono); font-size: var(--s-xs); color: var(--mute
 .growth-shots img { width: 100%; border-radius: 8px; border: 1px solid var(--line); }
 
 /* Videos */
-.vids { display: flex; flex-wrap: wrap; justify-content: center; gap: 28px 14px; }
-.vcard { margin: 0; display: grid; gap: 12px; min-width: 0; align-content: start; flex: 0 0 calc((100% - 42px) / 4); }
-.vbreak { flex-basis: 100%; height: 0; }
+.vg-index { list-style: none; margin: 0 0 clamp(30px, 4.4vw, 48px); padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.vg-index a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: .5em .85em;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  font-family: var(--mono);
+  font-size: var(--s-xs);
+  text-decoration: none;
+  color: var(--fg);
+  transition: border-color .2s ease, background-color .2s ease;
+}
+.vg-index a::before { content: ""; width: 9px; height: 9px; border-radius: 2px; background: var(--c); }
+.vg-index b { font-weight: 500; color: var(--muted); padding-left: 9px; border-left: 1px solid var(--line); }
+.vg-index a:hover { border-color: var(--c); background: color-mix(in srgb, var(--c) 10%, var(--panel)); }
+.vgroups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(48px, 6.5vw, 80px) 14px; }
+.vgroup { --c: var(--violet); grid-column: 1 / -1; min-width: 0; scroll-margin-top: 92px; }
+.vgroup.half { grid-column: auto; }
+.vg-violet { --c: var(--violet); }
+.vg-mango { --c: var(--mango); }
+.vg-teal { --c: var(--teal); }
+.vg-rose { --c: var(--rose); }
+.vg-head {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 16px;
+  align-items: end;
+  padding-bottom: 16px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+.vg-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 96px;
+  height: 2px;
+  background: var(--c);
+  transform-origin: left;
+}
+.vg-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: var(--s-xs);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--muted);
+}
+.vg-tag::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+.vg-head h3 { margin-top: 8px; }
+.vg-head p { margin-top: 6px; color: var(--muted); font-size: var(--s-sm); max-width: 44em; }
+.vg-count {
+  font-family: var(--mono);
+  font-size: var(--s-xs);
+  white-space: nowrap;
+  padding: .3em .65em;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--c) 16%, var(--panel));
+  color: var(--fg);
+}
+.vgroup .vmeta { color: var(--c); }
+.vids { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 30px 14px; align-items: start; }
+.vgroup.half .vids { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.vids + .vids { margin-top: 30px; }
+.vcard { margin: 0; display: grid; gap: 12px; min-width: 0; align-content: start; }
+.vcard.wide { grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 14px; align-items: end; }
+.vcard.wide .vframe { grid-column: span 3; aspect-ratio: 16 / 9; }
+.vcard.wide figcaption { grid-column: 4; padding-bottom: 2px; }
+.vcard.wide h4 { font-size: 1.2rem; }
 .vframe {
   position: relative;
   aspect-ratio: 9 / 16;
@@ -1485,14 +1559,20 @@ footer .wrap {
 /* Sections rise in as they scroll into view (browsers with scroll-driven animations) */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .section-head, .case > *, .growth, .case-2, .vids, .trk, .gal figure, .about > *, .contact-box {
+    .section-head, .case > *, .growth, .case-2, .vids, .vg-head, .trk, .gal figure, .about > *, .contact-box {
       animation: rise-view linear both;
       animation-timeline: view();
       animation-range: entry 5% entry 75%;
     }
+    .vg-head::after {
+      animation: grow-x linear both;
+      animation-timeline: view();
+      animation-range: entry 20% entry 100%;
+    }
   }
 }
 @keyframes rise-view { from { opacity: .2; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+@keyframes grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 @media (prefers-reduced-motion: reduce) {
   .grain::before, .hero::before, .hero::after, .reel-strip-track, .contact-box::before { animation: none; }
@@ -1523,6 +1603,9 @@ footer .wrap {
   .top-wa span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .top-wa svg { width: 1.25em; height: 1.25em; }
 }
+@media (max-width: 1100px) {
+  .vcard .vmeta { font-size: .66rem; letter-spacing: .04em; }
+}
 @media (max-width: 980px) {
   .case { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
   .case-side { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1537,16 +1620,22 @@ footer .wrap {
   .phone-frame { max-width: 220px; }
   .case-side { grid-template-columns: minmax(0, 1fr); }
   .case-2 { grid-template-columns: minmax(0, 1fr); }
-  .vids {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
+  .vgroups { grid-template-columns: minmax(0, 1fr); }
+  .vgroup.half { grid-column: 1 / -1; }
+  .vg-head { align-items: start; }
+  .vids, .vgroup.half .vids {
+    display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 12px;
     padding-bottom: 10px;
   }
   .vcard { flex: 0 0 64%; scroll-snap-align: start; }
-  .vbreak { display: none; }
+  .vcard.wide { flex-basis: 100%; grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .vids-solo { padding-bottom: 0; }
+  .vids + .vids { margin-top: 26px; }
+  .vcard.wide .vframe, .vcard.wide figcaption { grid-column: auto; }
+  .vcard.wide h4 { font-size: 1.02rem; }
   .trk { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .gal { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .about { grid-template-columns: minmax(0, 1fr); }
@@ -1654,7 +1743,7 @@ html, body { margin: 0; }
           <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
           <span class="af"></span>
           <div class="meters"><i></i><i></i></div>
-          <div class="bar top-bar"><span class="rec"><span class="dot"></span>REC</span><span id="tc">00:03:12:08</span></div>
+          <div class="bar top-bar"><span class="rec"><span class="dot"></span>REC</span><span id="tc">00:00:00:00</span></div>
           <div class="bar bottom-bar"><span>Captação em Restaurante</span><span>4K</span></div>
         </div>
       </figure>
@@ -1786,73 +1875,173 @@ html, body { margin: 0; }
       <div class="section-head">
         <p class="eyebrow"><span class="steps" style="--p: 16.67%" aria-hidden="true"><i class="done"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i></span>Vídeos</p>
         <h2>Trabalhos Recentes</h2>
-        <p class="sub">Toque na capa para assistir nesta página.</p>
+        <p class="sub">Separados por segmento. Toque na capa para assistir nesta página.</p>
       </div>
-      <div class="vids">
-        <figure class="vcard">
-          <div class="vframe">
-            <video preload="none" playsinline poster="capas/missa-novo-padre.jpg"><source src="video/hls/missa-novo-padre/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/missa-novo-padre.mp4" type="video/mp4"></video>
-            <span class="vdur">2:01</span>
-            <span class="eq" hidden><i></i><i></i><i></i></span>
-            <button class="vplay" type="button" aria-label="Assistir: Missa do Novo Padre"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+      <ul class="vg-index" aria-label="Grupos de vídeos">
+        <li><a class="vg-violet" href="#v-eventos">Eventos<b>3</b></a></li>
+        <li><a class="vg-mango" href="#v-gastronomia">Gastronomia<b>5</b></a></li>
+        <li><a class="vg-teal" href="#v-varejo">Varejo<b>2</b></a></li>
+        <li><a class="vg-rose" href="#v-servicos">Serviços<b>2</b></a></li>
+      </ul>
+      <div class="vgroups">
+      <section class="vgroup vg-violet" id="v-eventos" aria-labelledby="v-eventos-t">
+        <header class="vg-head">
+          <div>
+            <span class="vg-tag">Eventos</span>
+            <h3 id="v-eventos-t">Missas e Celebrações</h3>
+            <p>Coberturas completas, com música, fiéis e os momentos mais marcantes de cada celebração.</p>
           </div>
-          <figcaption><span class="vmeta">Cobertura</span><h4>Missa do Novo Padre</h4>Celebração, música e comunidade no Santuário Nossa Senhora de Fátima, com legendas.</figcaption>
-        </figure>
-        <figure class="vcard">
-          <div class="vframe">
-            <video preload="none" playsinline poster="capas/ultima-missa.jpg"><source src="video/hls/ultima-missa/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/ultima-missa.mp4" type="video/mp4"></video>
-            <span class="vdur">1:17</span>
-            <span class="eq" hidden><i></i><i></i><i></i></span>
-            <button class="vplay" type="button" aria-label="Assistir: Última Missa do Pe. Juninho"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+          <span class="vg-count">3 vídeos</span>
+        </header>
+        <div class="vids">
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/missa-novo-padre.jpg"><source src="video/hls/missa-novo-padre/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/missa-novo-padre.mp4" type="video/mp4"></video>
+              <span class="vdur">2:01</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Missa do Novo Padre"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Cobertura</span><h4>Missa do Novo Padre</h4>Celebração, música e comunidade no Santuário Nossa Senhora de Fátima, com legendas.</figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/ultima-missa.jpg"><source src="video/hls/ultima-missa/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/ultima-missa.mp4" type="video/mp4"></video>
+              <span class="vdur">1:17</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Última Missa do Pe. Juninho"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Cobertura</span><h4>Última Missa do Pe. Juninho</h4>Despedida: eucaristia, fiéis e o abraço entre os padres.</figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/ns-aparecida.jpg"><source src="video/hls/ns-aparecida/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/ns-aparecida.mp4" type="video/mp4"></video>
+              <span class="vdur">2:50</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Nossa Senhora Aparecida e Pe. Juninho"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Cobertura</span><h4>Nossa Senhora Aparecida e Pe. Juninho</h4>Carreata, chegada à igreja, coroação da imagem e missa.</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="vgroup vg-mango" id="v-gastronomia" aria-labelledby="v-gastronomia-t">
+        <header class="vg-head">
+          <div>
+            <span class="vg-tag">Gastronomia</span>
+            <h3 id="v-gastronomia-t">Restaurantes e Sorveterias</h3>
+            <p>Produto em close, preparo e salão, em vídeos institucionais e chamadas com preço.</p>
           </div>
-          <figcaption><span class="vmeta">Cobertura</span><h4>Última Missa do Pe. Juninho</h4>Despedida: eucaristia, fiéis e o abraço entre os padres.</figcaption>
-        </figure>
-        <figure class="vcard">
-          <div class="vframe">
-            <video preload="none" playsinline poster="capas/ns-aparecida.jpg"><source src="video/hls/ns-aparecida/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/ns-aparecida.mp4" type="video/mp4"></video>
-            <span class="vdur">2:50</span>
-            <span class="eq" hidden><i></i><i></i><i></i></span>
-            <button class="vplay" type="button" aria-label="Assistir: Nossa Senhora Aparecida e Pe. Juninho"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+          <span class="vg-count">5 vídeos</span>
+        </header>
+        <div class="vids vids-solo">
+          <figure class="vcard wide">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/kits-aniversario-v2.jpg"><source src="video/hls/kits-aniversario/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/kits-aniversario.mp4" type="video/mp4"></video>
+              <span class="vdur">1:25</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Aniversário da Kit's Sorvetes"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Kit's Sorvetes · Institucional</span><h4>Aniversário da Kit's Sorvetes</h4>Vídeo horizontal com a fachada à noite, a equipe falando para a câmera e o preparo de casquinhas, milk-shakes e açaí.</figcaption>
+          </figure>
+        </div>
+        <div class="vids">
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/sushi-roteiro-1-v2.jpg"><source src="video/hls/sushi-roteiro-1/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-1.mp4" type="video/mp4"></video>
+              <span class="vdur">0:27</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Apresentação do Buffet"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Sushi Bar · Roteiro 1</span><h4>Apresentação do Buffet</h4>Apresentadora no salão e tomadas do buffet, com legendas.</figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/sushi-roteiro-2-v3.jpg"><source src="video/hls/sushi-roteiro-2/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-2.mp4" type="video/mp4"></video>
+              <span class="vdur">0:23</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Chamada com Preços"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Sushi Bar · Roteiro 2</span><h4>Chamada com Preços</h4>Apresentadora e buffet, com os preços de segunda a quarta e de quinta a sábado.</figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/sushi-roteiro-3-v2.jpg"><source src="video/hls/sushi-roteiro-3/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-3.mp4" type="video/mp4"></video>
+              <span class="vdur">0:19</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Versão Curta"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Sushi Bar · Roteiro 3</span><h4>Versão Curta</h4>Apresentadora, clientes se servindo e o buffet completo.</figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/self-service-v2.jpg"><source src="video/hls/self-service/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/self-service.mp4" type="video/mp4"></video>
+              <span class="vdur">0:39</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Só Produto"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Sushi Bar · Self-service</span><h4>Só Produto</h4>Buffet em close, tarja de preços e clientes montando o prato.</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="vgroup half vg-teal" id="v-varejo" aria-labelledby="v-varejo-t">
+        <header class="vg-head">
+          <div>
+            <span class="vg-tag">Varejo</span>
+            <h3 id="v-varejo-t">Loja de Artigos Esportivos</h3>
+            <p>Campanha de data comemorativa e vitrine de produtos, com apresentadora e chamada para a loja.</p>
           </div>
-          <figcaption><span class="vmeta">Cobertura</span><h4>Nossa Senhora Aparecida e Pe. Juninho</h4>Carreata, chegada à igreja, coroação da imagem e missa.</figcaption>
-        </figure>
-        <span class="vbreak" aria-hidden="true"></span>
-        <figure class="vcard">
-          <div class="vframe">
-            <video preload="none" playsinline poster="capas/sushi-roteiro-1.jpg"><source src="video/hls/sushi-roteiro-1/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-1.mp4" type="video/mp4"></video>
-            <span class="vdur">0:27</span>
-            <span class="eq" hidden><i></i><i></i><i></i></span>
-            <button class="vplay" type="button" aria-label="Assistir: Apresentação do Buffet"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+          <span class="vg-count">2 vídeos</span>
+        </header>
+        <div class="vids">
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/ca-dia-das-mulheres-v3.jpg"><source src="video/hls/ca-dia-das-mulheres/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/ca-dia-das-mulheres.mp4" type="video/mp4"></video>
+              <span class="vdur">0:56</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Campanha Dia das Mulheres"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">CA Beach Sports · Campanha</span><h4>Campanha Dia das Mulheres</h4>Apresentadora na loja, títulos animados e a chamada para até 50% de desconto em roupas esportivas femininas.</figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/ca-beach-tennis-v3.jpg"><source src="video/hls/ca-beach-tennis/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/ca-beach-tennis.mp4" type="video/mp4"></video>
+              <span class="vdur">1:02</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Raquetes, Roupas e Acessórios"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">CA Beach Sports · Produto</span><h4>Raquetes, Roupas e Acessórios</h4>Raquetes de beach tennis Zeiq e Drop Shot em detalhe, roupas e acessórios, com convite para conhecer a loja.</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="vgroup half vg-rose" id="v-servicos" aria-labelledby="v-servicos-t">
+        <header class="vg-head">
+          <div>
+            <span class="vg-tag">Serviços</span>
+            <h3 id="v-servicos-t">Barbearia</h3>
+            <p>A história do profissional e a apresentação do atendimento, com chamada para agendar.</p>
           </div>
-          <figcaption><span class="vmeta">Roteiro 1</span><h4>Apresentação do Buffet</h4>Apresentadora no salão e tomadas do buffet, com legendas.</figcaption>
-        </figure>
-        <figure class="vcard">
-          <div class="vframe">
-            <video preload="none" playsinline poster="capas/sushi-roteiro-2.jpg"><source src="video/hls/sushi-roteiro-2/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-2.mp4" type="video/mp4"></video>
-            <span class="vdur">0:23</span>
-            <span class="eq" hidden><i></i><i></i><i></i></span>
-            <button class="vplay" type="button" aria-label="Assistir: Chamada com Preços"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
-          </div>
-          <figcaption><span class="vmeta">Roteiro 2</span><h4>Chamada com Preços</h4>Apresentadora e buffet, com os preços de segunda a quarta e de quinta a sábado.</figcaption>
-        </figure>
-        <figure class="vcard">
-          <div class="vframe">
-            <video preload="none" playsinline poster="capas/sushi-roteiro-3.jpg"><source src="video/hls/sushi-roteiro-3/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-3.mp4" type="video/mp4"></video>
-            <span class="vdur">0:19</span>
-            <span class="eq" hidden><i></i><i></i><i></i></span>
-            <button class="vplay" type="button" aria-label="Assistir: Versão Curta"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
-          </div>
-          <figcaption><span class="vmeta">Roteiro 3</span><h4>Versão Curta</h4>Apresentadora, clientes se servindo e o buffet completo.</figcaption>
-        </figure>
-        <figure class="vcard">
-          <div class="vframe">
-            <video preload="none" playsinline poster="capas/self-service.jpg"><source src="video/hls/self-service/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/self-service.mp4" type="video/mp4"></video>
-            <span class="vdur">0:39</span>
-            <span class="eq" hidden><i></i><i></i><i></i></span>
-            <button class="vplay" type="button" aria-label="Assistir: Só Produto"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
-          </div>
-          <figcaption><span class="vmeta">Self-service</span><h4>Só Produto</h4>Buffet em close, tarja de preços e clientes montando o prato.</figcaption>
-        </figure>
+          <span class="vg-count">2 vídeos</span>
+        </header>
+        <div class="vids">
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/suave-historia-v3.jpg"><source src="video/hls/suave-historia/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/suave-historia.mp4" type="video/mp4"></video>
+              <span class="vdur">0:55</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: História e Formação"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Suave Barber · Storytelling</span><h4>História e Formação</h4>O barbeiro conta como começou e os cursos que fez, com certificados e perfis dos mentores na tela, e apresenta a equipe.</figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/suave-felipe-v3.jpg"><source src="video/hls/suave-felipe/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/suave-felipe.mp4" type="video/mp4"></video>
+              <span class="vdur">0:43</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Corte Personalizado"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Suave Barber · Atendimento</span><h4>Corte Personalizado</h4>Do corte que não combina ao visual certo: atendimento sob medida, corte em close e chamada para agendar pelo link da bio.</figcaption>
+          </figure>
+        </div>
+      </section>
       </div>
     </div>
   </section>
@@ -2455,15 +2644,15 @@ html, body { margin: 0; }
   window.addEventListener('resize', updateScrub);
   updateScrub();
 
-  /* Viewfinder timecode runs at 24 frames per second */
+  /* Viewfinder timecode: 24 frames per second, from zero on every page load, back to zero every 3 minutes */
   var tc = document.getElementById('tc');
   if (tc && !reduce) {
-    var startFrames = ((0 * 60 + 3) * 60 + 12) * 24 + 8;
+    var LOOP = 3 * 60 * 24;
     var t0 = performance.now();
     var last = -1;
     function pad(n) { return (n < 10 ? '0' : '') + n; }
     (function tick(now) {
-      var f = startFrames + Math.floor((now - t0) / (1000 / 24));
+      var f = Math.max(0, Math.floor((now - t0) / (1000 / 24))) % LOOP;
       if (f !== last) {
         last = f;
         var ff = f % 24, total = Math.floor(f / 24);
