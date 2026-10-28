@@ -673,6 +673,34 @@ figcaption { font-family: var(--mono); font-size: var(--s-xs); color: var(--mute
 .vcard.wide .vframe { grid-column: span 3; aspect-ratio: 16 / 9; }
 .vcard.wide figcaption { grid-column: 4; padding-bottom: 2px; }
 .vcard.wide h4 { font-size: 1.2rem; }
+.vsubs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 34px 14px; align-items: start; }
+.vsub { grid-column: 1 / -1; min-width: 0; }
+.vsub-wide { grid-column: span 3; }
+.vsub-narrow { grid-column: span 1; }
+.vsub-wide .vids, .vsub-narrow .vids { grid-template-columns: minmax(0, 1fr); }
+.vsub-wide .vcard.wide { grid-template-columns: minmax(0, 1fr); align-items: start; }
+.vsub-wide .vcard.wide .vframe, .vsub-wide .vcard.wide figcaption { grid-column: auto; }
+.vsub-wide .vcard.wide figcaption { max-width: 62ch; padding-bottom: 0; }
+.vsub-wide .vcard.wide h4 { font-size: 1.02rem; }
+/* The wide video matches the height of the vertical one beside it, so both captions start on the same line */
+@supports (container-type: inline-size) {
+  @media (min-width: 761px) {
+    .vsubs { container-type: inline-size; }
+    .vsub-wide .vcard.wide .vframe { height: calc((100cqi - 42px) / 4 * 16 / 9); }
+  }
+}
+.vsub-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  font-family: var(--mono);
+  font-size: var(--s-xs);
+  color: var(--fg);
+}
+.vsub-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 22%, transparent); flex: none; }
+.vsub-label::after { content: ""; order: 1; flex: 1; height: 1px; background: linear-gradient(90deg, color-mix(in srgb, var(--c) 45%, var(--line)), var(--line) 40%); }
+.vsub-label b { order: 2; font-weight: 500; color: var(--muted); white-space: nowrap; }
 .vframe {
   position: relative;
   aspect-ratio: 9 / 16;
@@ -1572,7 +1600,6 @@ footer .wrap {
   }
 }
 @keyframes rise-view { from { opacity: .2; transform: translateY(40px); } to { opacity: 1; transform: none; } }
-@keyframes grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 @media (prefers-reduced-motion: reduce) {
   .grain::before, .hero::before, .hero::after, .reel-strip-track, .contact-box::before { animation: none; }
@@ -1636,6 +1663,10 @@ footer .wrap {
   .vids + .vids { margin-top: 26px; }
   .vcard.wide .vframe, .vcard.wide figcaption { grid-column: auto; }
   .vcard.wide h4 { font-size: 1.02rem; }
+  .vsubs { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+  .vsub-wide, .vsub-narrow { grid-column: 1 / -1; }
+  .vsub-narrow .vids { display: block; overflow: visible; padding-bottom: 0; }
+  .vsub-narrow .vcard { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: end; }
   .trk { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .gal { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .about { grid-template-columns: minmax(0, 1fr); }
@@ -1879,7 +1910,7 @@ html, body { margin: 0; }
       </div>
       <ul class="vg-index" aria-label="Grupos de vídeos">
         <li><a class="vg-violet" href="#v-eventos">Eventos<b>3</b></a></li>
-        <li><a class="vg-mango" href="#v-gastronomia">Gastronomia<b>5</b></a></li>
+        <li><a class="vg-mango" href="#v-gastronomia">Gastronomia<b>6</b></a></li>
         <li><a class="vg-teal" href="#v-varejo">Varejo<b>2</b></a></li>
         <li><a class="vg-rose" href="#v-servicos">Serviços<b>2</b></a></li>
       </ul>
@@ -1927,59 +1958,81 @@ html, body { margin: 0; }
         <header class="vg-head">
           <div>
             <span class="vg-tag">Gastronomia</span>
-            <h3 id="v-gastronomia-t">Restaurantes e Sorveterias</h3>
-            <p>Produto em close, preparo e salão, em vídeos institucionais e chamadas com preço.</p>
+            <h3 id="v-gastronomia-t">Restaurantes, Sorveterias e Pizzarias</h3>
+            <p>Produto em close, preparo e salão, em vídeos institucionais, chamadas com preço e delivery.</p>
           </div>
-          <span class="vg-count">5 vídeos</span>
+          <span class="vg-count">6 vídeos</span>
         </header>
-        <div class="vids vids-solo">
-          <figure class="vcard wide">
-            <div class="vframe">
-              <video preload="none" playsinline poster="capas/kits-aniversario-v2.jpg"><source src="video/hls/kits-aniversario/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/kits-aniversario.mp4" type="video/mp4"></video>
-              <span class="vdur">1:25</span>
-              <span class="eq" hidden><i></i><i></i><i></i></span>
-              <button class="vplay" type="button" aria-label="Assistir: Aniversário da Kit's Sorvetes"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+        <div class="vsubs">
+          <div class="vsub vsub-wide" role="group" aria-labelledby="vp-sorveteria-t">
+            <p class="vsub-label" id="vp-sorveteria-t"><span>Sorveteria</span><b>1 vídeo</b></p>
+            <div class="vids vids-solo">
+              <figure class="vcard wide">
+                <div class="vframe">
+                  <video preload="none" playsinline poster="capas/kits-aniversario-v2.jpg"><source src="video/hls/kits-aniversario/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/kits-aniversario.mp4" type="video/mp4"></video>
+                  <span class="vdur">1:25</span>
+                  <span class="eq" hidden><i></i><i></i><i></i></span>
+                  <button class="vplay" type="button" aria-label="Assistir: Aniversário da Kit's Sorvetes"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+                </div>
+                <figcaption><span class="vmeta">Kit's Sorvetes · Institucional</span><h4>Aniversário da Kit's Sorvetes</h4>Vídeo horizontal com a fachada à noite, a equipe falando para a câmera e o preparo de casquinhas, milk-shakes e açaí.</figcaption>
+              </figure>
             </div>
-            <figcaption><span class="vmeta">Kit's Sorvetes · Institucional</span><h4>Aniversário da Kit's Sorvetes</h4>Vídeo horizontal com a fachada à noite, a equipe falando para a câmera e o preparo de casquinhas, milk-shakes e açaí.</figcaption>
-          </figure>
-        </div>
-        <div class="vids">
-          <figure class="vcard">
-            <div class="vframe">
-              <video preload="none" playsinline poster="capas/sushi-roteiro-1-v2.jpg"><source src="video/hls/sushi-roteiro-1/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-1.mp4" type="video/mp4"></video>
-              <span class="vdur">0:27</span>
-              <span class="eq" hidden><i></i><i></i><i></i></span>
-              <button class="vplay" type="button" aria-label="Assistir: Apresentação do Buffet"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+          </div>
+          <div class="vsub vsub-narrow" role="group" aria-labelledby="vp-pizzaria-t">
+            <p class="vsub-label" id="vp-pizzaria-t"><span>Pizzaria</span><b>1 vídeo</b></p>
+            <div class="vids">
+              <figure class="vcard">
+                <div class="vframe">
+                  <video preload="none" playsinline poster="capas/pizza-delivery.jpg"><source src="video/hls/pizza-delivery/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/pizza-delivery.mp4" type="video/mp4"></video>
+                  <span class="vdur">0:46</span>
+                  <span class="eq" hidden><i></i><i></i><i></i></span>
+                  <button class="vplay" type="button" aria-label="Assistir: Delivery e Pizzas Doces"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+                </div>
+                <figcaption><span class="vmeta">Pizza ao Ponto · Delivery</span><h4>Delivery e Pizzas Doces</h4>Pizzas salgadas e doces em close, do corte ao prato, com chamada para pedir pelo delivery.</figcaption>
+              </figure>
             </div>
-            <figcaption><span class="vmeta">Sushi Bar · Roteiro 1</span><h4>Apresentação do Buffet</h4>Apresentadora no salão e tomadas do buffet, com legendas.</figcaption>
-          </figure>
-          <figure class="vcard">
-            <div class="vframe">
-              <video preload="none" playsinline poster="capas/sushi-roteiro-2-v3.jpg"><source src="video/hls/sushi-roteiro-2/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-2.mp4" type="video/mp4"></video>
-              <span class="vdur">0:23</span>
-              <span class="eq" hidden><i></i><i></i><i></i></span>
-              <button class="vplay" type="button" aria-label="Assistir: Chamada com Preços"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+          </div>
+          <div class="vsub" role="group" aria-labelledby="vp-japones-t">
+            <p class="vsub-label" id="vp-japones-t"><span>Restaurante Japonês</span><b>4 vídeos</b></p>
+            <div class="vids">
+              <figure class="vcard">
+                <div class="vframe">
+                  <video preload="none" playsinline poster="capas/sushi-roteiro-1-v2.jpg"><source src="video/hls/sushi-roteiro-1/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-1.mp4" type="video/mp4"></video>
+                  <span class="vdur">0:27</span>
+                  <span class="eq" hidden><i></i><i></i><i></i></span>
+                  <button class="vplay" type="button" aria-label="Assistir: Apresentação do Buffet"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+                </div>
+                <figcaption><span class="vmeta">Sushi Bar · Roteiro 1</span><h4>Apresentação do Buffet</h4>Apresentadora no salão e tomadas do buffet, com legendas.</figcaption>
+              </figure>
+              <figure class="vcard">
+                <div class="vframe">
+                  <video preload="none" playsinline poster="capas/sushi-roteiro-2-v3.jpg"><source src="video/hls/sushi-roteiro-2/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-2.mp4" type="video/mp4"></video>
+                  <span class="vdur">0:23</span>
+                  <span class="eq" hidden><i></i><i></i><i></i></span>
+                  <button class="vplay" type="button" aria-label="Assistir: Chamada com Preços"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+                </div>
+                <figcaption><span class="vmeta">Sushi Bar · Roteiro 2</span><h4>Chamada com Preços</h4>Apresentadora e buffet, com os preços de segunda a quarta e de quinta a sábado.</figcaption>
+              </figure>
+              <figure class="vcard">
+                <div class="vframe">
+                  <video preload="none" playsinline poster="capas/sushi-roteiro-3-v2.jpg"><source src="video/hls/sushi-roteiro-3/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-3.mp4" type="video/mp4"></video>
+                  <span class="vdur">0:19</span>
+                  <span class="eq" hidden><i></i><i></i><i></i></span>
+                  <button class="vplay" type="button" aria-label="Assistir: Versão Curta"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+                </div>
+                <figcaption><span class="vmeta">Sushi Bar · Roteiro 3</span><h4>Versão Curta</h4>Apresentadora, clientes se servindo e o buffet completo.</figcaption>
+              </figure>
+              <figure class="vcard">
+                <div class="vframe">
+                  <video preload="none" playsinline poster="capas/self-service-v2.jpg"><source src="video/hls/self-service/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/self-service.mp4" type="video/mp4"></video>
+                  <span class="vdur">0:39</span>
+                  <span class="eq" hidden><i></i><i></i><i></i></span>
+                  <button class="vplay" type="button" aria-label="Assistir: Só Produto"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+                </div>
+                <figcaption><span class="vmeta">Sushi Bar · Self-service</span><h4>Só Produto</h4>Buffet em close, tarja de preços e clientes montando o prato.</figcaption>
+              </figure>
             </div>
-            <figcaption><span class="vmeta">Sushi Bar · Roteiro 2</span><h4>Chamada com Preços</h4>Apresentadora e buffet, com os preços de segunda a quarta e de quinta a sábado.</figcaption>
-          </figure>
-          <figure class="vcard">
-            <div class="vframe">
-              <video preload="none" playsinline poster="capas/sushi-roteiro-3-v2.jpg"><source src="video/hls/sushi-roteiro-3/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/sushi-roteiro-3.mp4" type="video/mp4"></video>
-              <span class="vdur">0:19</span>
-              <span class="eq" hidden><i></i><i></i><i></i></span>
-              <button class="vplay" type="button" aria-label="Assistir: Versão Curta"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
-            </div>
-            <figcaption><span class="vmeta">Sushi Bar · Roteiro 3</span><h4>Versão Curta</h4>Apresentadora, clientes se servindo e o buffet completo.</figcaption>
-          </figure>
-          <figure class="vcard">
-            <div class="vframe">
-              <video preload="none" playsinline poster="capas/self-service-v2.jpg"><source src="video/hls/self-service/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/self-service.mp4" type="video/mp4"></video>
-              <span class="vdur">0:39</span>
-              <span class="eq" hidden><i></i><i></i><i></i></span>
-              <button class="vplay" type="button" aria-label="Assistir: Só Produto"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
-            </div>
-            <figcaption><span class="vmeta">Sushi Bar · Self-service</span><h4>Só Produto</h4>Buffet em close, tarja de preços e clientes montando o prato.</figcaption>
-          </figure>
+          </div>
         </div>
       </section>
       <section class="vgroup half vg-teal" id="v-varejo" aria-labelledby="v-varejo-t">

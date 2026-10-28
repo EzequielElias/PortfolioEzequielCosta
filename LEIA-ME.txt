@@ -8,7 +8,7 @@ O que tem nesta pasta
 index.html      A página do portfólio
 img/            Fotos e prints
 capas/          Capas dos vídeos
-video/          Os 12 vídeos em MP4 (computador e Android)
+video/          Os 13 vídeos em MP4 (computador e Android)
 video/hls/      Os mesmos vídeos em partes, para tocarem no iPhone e no Safari
 _headers        Configuração de tipos de arquivo dos vídeos (não apague)
 og-image.jpg    Imagem que aparece quando o link é enviado no WhatsApp
