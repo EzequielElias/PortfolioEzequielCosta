@@ -622,6 +622,7 @@ figcaption { font-family: var(--mono); font-size: var(--s-xs); color: var(--mute
 .vg-mango { --c: var(--mango); }
 .vg-teal { --c: var(--teal); }
 .vg-rose { --c: var(--rose); }
+.vg-green { --c: var(--meter); }
 .vg-head {
   position: relative;
   display: grid;
@@ -724,6 +725,57 @@ figcaption { font-family: var(--mono); font-size: var(--s-xs); color: var(--mute
 .vcard.wide .vframe { grid-column: span 3; aspect-ratio: 16 / 9; }
 .vcard.wide figcaption { grid-column: 4; padding-bottom: 2px; }
 .vcard.wide h4 { font-size: 1.2rem; }
+.vids.vids-feature { align-items: stretch; }
+.vids-feature .vcard { align-self: start; }
+.edit-panel {
+  grid-column: span 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(20px, 2.6vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background:
+    radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--c) 9%, transparent), transparent 60%),
+    var(--panel);
+}
+.ep-label { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: var(--s-xs); text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+.ep-label::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--rec); box-shadow: 0 0 8px var(--rec); }
+.ep-title { margin: 0; font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: clamp(1.15rem, 1rem + .6vw, 1.45rem); line-height: 1.2; color: var(--fg); }
+.ep-text { color: var(--muted); font-size: var(--s-md); max-width: 60ch; }
+.ep-check { margin-top: 6px; border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 10px; }
+.ep-check-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-family: var(--mono); font-size: var(--s-xs); text-transform: uppercase; letter-spacing: .08em; color: var(--fg); }
+.ep-check-head b { font-weight: 500; color: var(--c); white-space: nowrap; }
+.edit-checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.edit-checklist li {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 14px;
+  border-radius: 9px;
+  border: 1px solid color-mix(in srgb, var(--c) 28%, var(--line));
+  background: color-mix(in srgb, var(--c) 7%, var(--bg));
+  color: var(--fg);
+  font-size: var(--s-sm);
+  line-height: 1.45;
+}
+.edit-checklist strong { font-weight: 700; }
+.ck { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; background: var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 22%, transparent); }
+.ck svg { width: 16px; height: 16px; fill: none; stroke: var(--bg); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 24; stroke-dashoffset: 0; }
+.ec-ok { font-family: var(--mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--c); padding: .25em .55em; border-radius: 4px; border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); white-space: nowrap; }
+@media (prefers-reduced-motion: no-preference) {
+  .edit-checklist.will-check .ck { transform: scale(.4); opacity: 0; }
+  .edit-checklist.will-check .ck svg { stroke-dashoffset: 24; }
+  .edit-checklist.will-check .ec-ok { opacity: 0; }
+  .edit-checklist.checked .ck { animation: ck-pop .45s cubic-bezier(.3, 1.5, .5, 1) both; animation-delay: calc(var(--i) * .35s); }
+  .edit-checklist.checked .ck svg { animation: ck-draw .4s ease-out both; animation-delay: calc(var(--i) * .35s + .2s); }
+  .edit-checklist.checked .ec-ok { animation: rise-in .4s ease-out both; animation-delay: calc(var(--i) * .35s + .35s); }
+}
+@keyframes ck-pop { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ck-draw { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
 .vsubs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 34px 14px; align-items: start; }
 .vsub { grid-column: 1 / -1; min-width: 0; }
 .vsub-wide { grid-column: span 3; }
@@ -1720,6 +1772,11 @@ footer .wrap {
   .vcard.wide h4 { font-size: 1.02rem; }
   .vids.vids-center { justify-content: flex-start; }
   .filmstrip { display: none; }
+  .vids.vids-feature { display: grid; grid-template-columns: minmax(0, 1fr); overflow: visible; padding-bottom: 0; gap: 16px; }
+  .vids-feature .vcard { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: end; }
+  .edit-panel { grid-column: auto; }
+  .edit-checklist li { grid-template-columns: 24px minmax(0, 1fr); gap: 10px; padding: 10px 12px; }
+  .ec-ok { display: none; }
   .vsubs { grid-template-columns: minmax(0, 1fr); gap: 30px; }
   .vsub-wide, .vsub-narrow { grid-column: 1 / -1; }
   .vsub-narrow .vids { display: block; overflow: visible; padding-bottom: 0; }
@@ -2009,6 +2066,8 @@ html, body { margin: 0; }
         <li><a class="vg-mango" href="#v-gastronomia">Gastronomia<b>6</b></a></li>
         <li><a class="vg-teal" href="#v-varejo">Varejo<b>2</b></a></li>
         <li><a class="vg-rose" href="#v-servicos">Serviços<b>2</b></a></li>
+        <li><a class="vg-green" href="#v-editado">Edição com IA<b>1</b></a></li>
+        <li><a class="vg-green" href="#v-ia">IA · Claude<b>4</b></a></li>
       </ul>
       <div class="vgroups">
       <section class="vgroup vg-violet" id="v-eventos" aria-labelledby="v-eventos-t">
@@ -2194,6 +2253,88 @@ html, body { margin: 0; }
               <button class="vplay" type="button" aria-label="Assistir: Corte Personalizado"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
             </div>
             <figcaption><span class="vmeta">Suave Barber · Atendimento</span><h4>Corte Personalizado</h4>Do corte que não combina ao visual certo: atendimento sob medida, corte em close e chamada para agendar pelo link da bio.</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="vgroup vg-green" id="v-editado" aria-labelledby="v-editado-t">
+        <header class="vg-head">
+          <div>
+            <span class="vg-tag">Edição com IA</span>
+            <h3 id="v-editado-t">Vídeo Editado com IA</h3>
+            <p>Uma gravação real, com a edição feita junto com o Claude.</p>
+          </div>
+          <span class="vg-count">1 vídeo</span>
+        </header>
+        <div class="vids vids-feature">
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/edicao-ia-portfolio.jpg"><source src="video/hls/edicao-ia-portfolio/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/edicao-ia-portfolio.mp4" type="video/mp4"></video>
+              <span class="vdur">1:04</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Meu Portfólio Criado com o Claude"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Reels · Edição com IA</span><h4>Meu Portfólio Criado com o Claude</h4></figcaption>
+          </figure>
+          <div class="edit-panel">
+            <p class="ep-label">Sobre a Edição</p>
+            <h4 class="ep-title">Da Gravação ao Vídeo Pronto</h4>
+            <p class="ep-text">Neste vídeo eu apresento este portfólio: como ele foi criado com o Claude, publicado no GitHub e no Cloudflare e pensado para funcionar como uma página de vendas do meu trabalho. A fala divide a tela com a navegação pelo site, e cada trecho ganhou elementos visuais e sonoros que reforçam o que está sendo dito.</p>
+            <div class="ep-check">
+              <p class="ep-check-head"><span>Etapas da edição executadas pelo Claude</span><b>3 de 3</b></p>
+              <ul class="edit-checklist">
+                <li><span class="ck" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="ec-txt"><strong>Desenho de som:</strong> responsável por todos os efeitos sonoros do vídeo</span><span class="ec-ok">Concluído</span></li>
+                <li><span class="ck" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="ec-txt"><strong>Motion design:</strong> criação, do zero, de todas as animações presentes no vídeo</span><span class="ec-ok">Concluído</span></li>
+                <li><span class="ck" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="ec-txt"><strong>Legendas dinâmicas:</strong> criação de todas as legendas, com variação tipográfica e fontes em negrito para destacar os trechos de maior impacto</span><span class="ec-ok">Concluído</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="vgroup vg-green" id="v-ia" aria-labelledby="v-ia-t">
+        <header class="vg-head">
+          <div>
+            <span class="vg-tag">Inteligência Artificial</span>
+            <h3 id="v-ia-t">Vídeos Criados com IA · Claude</h3>
+            <p>Animações em motion design criadas com o Claude, para anúncios, histórias de marca e conteúdos de posicionamento.</p>
+          </div>
+          <span class="vg-count">4 vídeos</span>
+        </header>
+        <div class="vids">
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/ia-ninguem-compra.jpg"><source src="video/hls/ia-ninguem-compra/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/ia-ninguem-compra.mp4" type="video/mp4"></video>
+              <span class="vdur">0:36</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Ninguém Compra o que Não Conhece"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Motion · Constância</span><h4>Ninguém Compra o que Não Conhece</h4>Por que aparecer com constância: o perfil é a primeira impressão do negócio, e quem vira lembrança vira escolha. Ilustrações coloridas de loja, curso e dominós.</figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/ia-automacao-colorida-v3.jpg"><source src="video/hls/ia-automacao-colorida/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/ia-automacao-colorida.mp4" type="video/mp4"></video>
+              <span class="vdur">0:28</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Atendimento com IA 24 Horas"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Motion · Anúncio</span><h4>Atendimento com IA 24 Horas</h4>Anúncio sobre IA treinada para otimizar os processos da empresa: atendimento 24 horas, menos custo por venda, mais margem e chamada para um diagnóstico gratuito.</figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/ia-hamburgueria.jpg"><source src="video/hls/ia-hamburgueria/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/ia-hamburgueria.mp4" type="video/mp4"></video>
+              <span class="vdur">0:51</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: A Hamburgueria do Diego"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Motion · Storytelling</span><h4>A Hamburgueria do Diego</h4>História ilustrada de um produto bom com comunicação parada: o motion põe os ingredientes em movimento, destaca a promoção e transforma olhar em pedido.</figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vframe">
+              <video preload="none" playsinline poster="capas/ia-motion-prende.jpg"><source src="video/hls/ia-motion-prende/index.m3u8" type="application/vnd.apple.mpegurl"><source src="video/ia-motion-prende.mp4" type="video/mp4"></video>
+              <span class="vdur">1:22</span>
+              <span class="eq" hidden><i></i><i></i><i></i></span>
+              <button class="vplay" type="button" aria-label="Assistir: Por Que o Motion Prende"><span class="btnc"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></span></button>
+            </div>
+            <figcaption><span class="vmeta">Motion · Posicionamento</span><h4>Por Que o Motion Prende</h4>Animação minimalista sobre os dois segundos que o público leva para decidir se assiste, com exemplos para infoprodutos, empresas, serviços, imóveis e cortes de podcast.</figcaption>
           </figure>
         </div>
       </section>
@@ -3460,6 +3601,20 @@ html, body { margin: 0; }
     if (e.target.closest('a')) return;
     if (window.matchMedia('(hover: none)').matches) { mq.classList.toggle('is-paused'); }
   });
+})();
+(function () {
+  /* Edit checklist: items tick one after another when the panel comes into view */
+  var list = document.querySelector('.edit-checklist');
+  if (!list) return;
+  Array.prototype.forEach.call(list.children, function (li, i) { li.style.setProperty('--i', i); });
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  list.classList.add('will-check');
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { list.classList.add('checked'); list.classList.remove('will-check'); io.disconnect(); }
+    });
+  }, { threshold: 0.4 });
+  io.observe(list);
 })();
 </script>
 
